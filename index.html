@@ -1,37 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event Management System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <style>
-    body { background: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
-    header { background: linear-gradient(45deg, #007bff, #00c6ff); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-    .card { border-radius: 15px; transition: transform 0.2s ease-in-out; }
-    .card:hover { transform: translateY(-3px); box-shadow: 0px 4px 20px rgba(0,0,0,0.1); }
-    .nav-tabs .nav-link { font-weight: 500; }
-    .nav-tabs .nav-link.active { background-color: #007bff; color: white !important; border-radius: 8px 8px 0 0; }
-    .btn { border-radius: 8px; font-weight: 500; }
-    .table { border-radius: 8px; overflow: hidden; }
-    .table th { background: #007bff; color: white; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Management System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+body{background:#f4f6f9;font-family:'Segoe UI',sans-serif;}
+header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20px;border-radius:10px;margin-bottom:20px;text-align:center;}
+.card{border-radius:15px;transition: transform .2s ease-in-out;}
+.card:hover{transform:translateY(-3px);box-shadow:0 4px 20px rgba(0,0,0,.1);}
+.nav-tabs .nav-link{font-weight:500;}
+.nav-tabs .nav-link.active{background-color:#007bff;color:white !important;border-radius:8px 8px 0 0;}
+.btn{border-radius:8px;font-weight:500;}
+.table{border-radius:8px;overflow:hidden;}
+.table th{background:#007bff;color:white;}
+</style>
 </head>
 <body>
-
 <div class="container py-4">
-
 <header>
 <h2>📌 Event Management System</h2>
 <p style="margin:0;">Create Events, Register Participants, Manage & Export Data</p>
 </header>
 
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-<li class="nav-item"><button class="nav-link active" id="events-tab" data-bs-toggle="tab" data-bs-target="#events">📅 Manage Events</button></li>
-<li class="nav-item"><button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register">📝 Register</button></li>
-<li class="nav-item"><button class="nav-link" id="view-tab" data-bs-toggle="tab" data-bs-target="#view">👥 View Registrations</button></li>
-<li class="nav-item"><button class="nav-link" id="export-tab" data-bs-toggle="tab" data-bs-target="#export">⬇️ Export</button></li>
+<li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#events">📅 Manage Events</button></li>
+<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#register">📝 Register</button></li>
+<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#view">👥 View Registrations</button></li>
+<li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#export">⬇️ Export</button></li>
 </ul>
 
 <div class="tab-content mt-3">
@@ -41,33 +39,15 @@
 <div class="card shadow-sm p-3 mb-4">
 <h5>➕ Create Event</h5>
 <form id="eventForm" class="row g-3">
-<div class="col-md-4">
-<label class="form-label">Event Name</label>
-<input type="text" id="eventName" class="form-control" required>
-</div>
-<div class="col-md-4">
-<label class="form-label">Event Date</label>
-<input type="date" id="eventDate" class="form-control" required>
-</div>
-<div class="col-md-4">
-<label class="form-label">Location</label>
-<input type="text" id="eventLocation" class="form-control" required>
-</div>
-<div class="col-12">
-<button type="submit" class="btn btn-primary w-100">Create Event</button>
-</div>
+<div class="col-md-4"><label class="form-label">Event Name</label><input type="text" id="eventName" class="form-control" required></div>
+<div class="col-md-4"><label class="form-label">Event Date</label><input type="date" id="eventDate" class="form-control" required></div>
+<div class="col-md-4"><label class="form-label">Location</label><input type="text" id="eventLocation" class="form-control" required></div>
+<div class="col-12"><button type="submit" class="btn btn-primary w-100">Create Event</button></div>
 </form>
 </div>
 <div class="card shadow-sm p-3">
 <h5>📋 Event List</h5>
-<div class="table-responsive">
-<table class="table table-bordered text-center" id="eventTable">
-<thead>
-<tr><th>Name</th><th>Date</th><th>Location</th><th>Actions</th></tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
+<div class="table-responsive"><table class="table table-bordered text-center" id="eventTable"><thead><tr><th>Name</th><th>Date</th><th>Location</th></tr></thead><tbody></tbody></table></div>
 </div>
 </div>
 
@@ -76,48 +56,17 @@
 <div class="card shadow-sm p-3">
 <h5>📝 Register for Event</h5>
 <form id="regForm" class="row g-3">
-<div class="col-md-6">
-<label class="form-label">Select Event</label>
-<select id="eventSelect" class="form-control" required></select>
-</div>
-<div class="col-md-6">
-<label class="form-label">Naam</label>
-<input type="text" id="name" class="form-control" required>
-</div>
-<div class="col-md-6">
-<label class="form-label">Gender</label><br>
-<div class="form-check form-check-inline">
-<input type="radio" name="gender" value="Male" class="form-check-input" required>
-<label class="form-check-label">Male</label>
-</div>
-<div class="form-check form-check-inline">
-<input type="radio" name="gender" value="Female" class="form-check-input">
-<label class="form-check-label">Female</label>
-</div>
-</div>
-<div class="col-md-6">
-<label class="form-label">Mobile</label>
-<input type="tel" id="mobile" class="form-control" pattern="[0-9]{10}" required>
-</div>
-<div class="col-md-6">
-<label class="form-label">Email</label>
-<input type="email" id="email" class="form-control" required>
-</div>
-<div class="col-md-6">
-<label class="form-label">DOB</label>
-<input type="date" id="dob" class="form-control" required>
-</div>
-<div class="col-md-6">
-<label class="form-label">Race Name</label>
-<input type="text" id="race" class="form-control" required>
-</div>
-<div class="col-md-6">
-<label class="form-label">Bib Number</label>
-<input type="number" id="bib" class="form-control" required>
-</div>
-<div class="col-12">
-<button type="submit" class="btn btn-success w-100">Register</button>
-</div>
+<div class="col-md-6"><label class="form-label">Select Event</label><select id="eventSelect" class="form-control" required></select></div>
+<div class="col-md-6"><label class="form-label">Naam</label><input type="text" id="name" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">Gender</label><br>
+<div class="form-check form-check-inline"><input type="radio" name="gender" value="Male" class="form-check-input" required><label class="form-check-label">Male</label></div>
+<div class="form-check form-check-inline"><input type="radio" name="gender" value="Female" class="form-check-input"><label class="form-check-label">Female</label></div></div>
+<div class="col-md-6"><label class="form-label">Mobile</label><input type="tel" id="mobile" class="form-control" pattern="[0-9]{10}" required></div>
+<div class="col-md-6"><label class="form-label">Email</label><input type="email" id="email" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">DOB</label><input type="date" id="dob" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">Race Name</label><input type="text" id="race" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">Bib Number</label><input type="number" id="bib" class="form-control" required></div>
+<div class="col-12"><button type="submit" class="btn btn-success w-100">Register</button></div>
 </form>
 </div>
 </div>
@@ -125,153 +74,96 @@
 <!-- View Registrations -->
 <div class="tab-pane fade" id="view">
 <div class="card shadow-sm p-3">
-<h5>👥 View Registrations</h5>
-<div class="mb-3">
-<label class="form-label">Select Event</label>
-<select id="viewEventSelect" class="form-control" onchange="renderRegistrations()"></select>
+<h5>👥 View Event Registrations</h5>
+<div class="row mb-3">
+<div class="col-md-6"><select id="viewEventSelect" class="form-control"></select></div>
+<div class="col-md-6"><button class="btn btn-secondary w-100" onclick="renderRegistrations()">View</button></div>
 </div>
-<div class="table-responsive">
-<table class="table table-bordered text-center" id="registrationTable">
-<thead>
-<tr><th>Name</th><th>Gender</th><th>Mobile</th><th>Email</th><th>DOB</th><th>Race</th><th>Bib</th><th>Action</th></tr>
-</thead>
-<tbody></tbody>
-</table>
-</div>
+<div class="table-responsive"><table class="table table-bordered text-center" id="registrationTable"><thead><tr><th>Name</th><th>Gender</th><th>Mobile</th><th>Email</th><th>DOB</th><th>Race</th><th>Bib</th></tr></thead><tbody></tbody></table></div>
 </div>
 </div>
 
 <!-- Export -->
 <div class="tab-pane fade" id="export">
 <div class="card shadow-sm p-3">
-<h5>⬇️ Export Data</h5>
+<h5>⬇️ Export Registrations to Excel</h5>
 <div class="row g-3">
-<div class="col-md-6">
-<label class="form-label">Select Event</label>
-<select id="exportEventSelect" class="form-control"></select>
+<div class="col-md-6"><select id="exportEventSelect" class="form-control"></select></div>
+<div class="col-md-6"><button class="btn btn-warning w-100" onclick="downloadEventExcel()">Export Event</button></div>
+<div class="col-12"><button class="btn btn-info w-100 mt-3" onclick="downloadAllExcel()">Export All</button></div>
 </div>
-<div class="col-md-6 d-flex align-items-end">
-<button class="btn btn-info w-100 me-2" onclick="downloadEventExcel()">Event Excel</button>
-<button class="btn btn-secondary w-100" onclick="downloadAllExcel()">All Registrations</button>
-</div>
-</div>
-</div>
-</div>
-
 </div>
 </div>
 
 <script>
-let events = JSON.parse(localStorage.getItem("events")) || [];
-let registrations = JSON.parse(localStorage.getItem("registrations")) || [];
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbzDd2fXT34MUrP3XmzfIsNVIJcw0HZ4hYJiFoPpA_vAiqVhWQpA5GT_ga665dcepFMG/exec";
+const SHEET_URL="https://script.google.com/macros/s/AKfycby2Sf_9y78zKVyZ4ZK_oXXpB-rx1zTnU4EwlK7sdTwruWgG2I2MAuRMQyc847MoCFqaMg/exec";
+let events = [], registrations = [];
 
-function renderEvents(){
+async function fetchEvents(){
+  let res = await fetch(SHEET_URL+"?type=events");
+  let data = await res.json();
+  events = data.map(e=>({name:e[0],date:e[1],location:e[2]}));
   let eventTable = document.querySelector("#eventTable tbody");
   let eventSelect = document.getElementById("eventSelect");
-  let exportEventSelect = document.getElementById("exportEventSelect");
-  let viewEventSelect = document.getElementById("viewEventSelect");
-  eventTable.innerHTML = "";
-  eventSelect.innerHTML = "";
-  exportEventSelect.innerHTML = "";
-  viewEventSelect.innerHTML = "";
-
-  events.forEach((ev,index)=>{
-    eventTable.innerHTML += `<tr>
-      <td>${ev.name}</td>
-      <td>${ev.date}</td>
-      <td>${ev.location}</td>
-      <td>
-        <button class="btn btn-sm btn-warning me-1" onclick="editEvent(${index})">Edit</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteEvent(${index})">Delete</button>
-      </td>
-    </tr>`;
+  let viewSelect = document.getElementById("viewEventSelect");
+  let exportSelect = document.getElementById("exportEventSelect");
+  eventTable.innerHTML = ""; eventSelect.innerHTML=""; viewSelect.innerHTML=""; exportSelect.innerHTML="";
+  events.forEach(ev=>{
+    eventTable.innerHTML += `<tr><td>${ev.name}</td><td>${ev.date}</td><td>${ev.location}</td></tr>`;
     eventSelect.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
-    exportEventSelect.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
-    viewEventSelect.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+    viewSelect.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
+    exportSelect.innerHTML += `<option value="${ev.name}">${ev.name}</option>`;
   });
+  fetchRegistrations();
+}
 
+async function fetchRegistrations(){
+  let selected = document.getElementById("viewEventSelect")?.value || "";
+  let res = await fetch(SHEET_URL+"?type=registrations&event="+selected);
+  let data = await res.json();
+  registrations = data.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],race:r[6],bib:r[7]}));
   renderRegistrations();
 }
-
-function deleteEvent(index){
-  if(confirm("Delete this event?")){
-    events.splice(index,1);
-    localStorage.setItem("events",JSON.stringify(events));
-    renderEvents();
-  }
-}
-
-function editEvent(index){
-  let ev = events[index];
-  document.getElementById("eventName").value = ev.name;
-  document.getElementById("eventDate").value = ev.date;
-  document.getElementById("eventLocation").value = ev.location;
-  deleteEvent(index);
-}
-
-document.getElementById("eventForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  let event = {
-    name: document.getElementById("eventName").value,
-    date: document.getElementById("eventDate").value,
-    location: document.getElementById("eventLocation").value
-  };
-  events.push(event);
-  localStorage.setItem("events",JSON.stringify(events));
-  renderEvents();
-  this.reset();
-});
-
-document.getElementById("regForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  let reg = {
-    event: document.getElementById("eventSelect").value,
-    name: document.getElementById("name").value,
-    gender: document.querySelector("input[name='gender']:checked").value,
-    mobile: document.getElementById("mobile").value,
-    email: document.getElementById("email").value,
-    dob: document.getElementById("dob").value,
-    race: document.getElementById("race").value,
-    bib: document.getElementById("bib").value
-  };
-  registrations.push(reg);
-  localStorage.setItem("registrations",JSON.stringify(registrations));
-  sendToSheet(reg);
-  this.reset();
-  alert("✅ Registration Saved!");
-  renderRegistrations();
-});
 
 function renderRegistrations(){
-  let selected = document.getElementById("viewEventSelect").value;
+  let selected = document.getElementById("viewEventSelect")?.value;
   let tableBody = document.querySelector("#registrationTable tbody");
+  if(!tableBody) return;
   tableBody.innerHTML = "";
-  registrations.filter(r=>r.event===selected).forEach((r,idx)=>{
+  registrations.filter(r=>r.event===selected).forEach(r=>{
     tableBody.innerHTML += `<tr>
-      <td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td>
-      <td>${r.dob}</td><td>${r.race}</td><td>${r.bib}</td>
-      <td><button class="btn btn-sm btn-danger" onclick="deleteRegistration(${idx})">Delete</button></td>
+    <td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td>
+    <td>${r.dob}</td><td>${r.race}</td><td>${r.bib}</td>
     </tr>`;
   });
 }
 
-function deleteRegistration(idx){
-  if(confirm("Delete this registration?")){
-    registrations.splice(idx,1);
-    localStorage.setItem("registrations",JSON.stringify(registrations));
-    renderRegistrations();
-  }
-}
+document.getElementById("eventForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  let ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
+  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(ev)});
+  document.getElementById("eventForm").reset();
+  fetchEvents();
+});
 
-function sendToSheet(data){
-  fetch(SHEET_URL,{
-    method:"POST",
-    body: JSON.stringify(data)
-  }).then(res=>res.json()).then(res=>{
-    console.log("Saved to Google Sheet",res);
-  }).catch(err=>console.log("Error",err));
-}
+document.getElementById("regForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  let reg={
+    type:"registration",
+    event:document.getElementById("eventSelect").value,
+    name:document.getElementById("name").value,
+    gender:document.querySelector("input[name='gender']:checked").value,
+    mobile:document.getElementById("mobile").value,
+    email:document.getElementById("email").value,
+    dob:document.getElementById("dob").value,
+    race:document.getElementById("race").value,
+    bib:document.getElementById("bib").value
+  };
+  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(reg)});
+  document.getElementById("regForm").reset();
+  alert("✅ Registration saved!");
+  fetchRegistrations();
+});
 
 function downloadEventExcel(){
   let selected = document.getElementById("exportEventSelect").value;
@@ -291,7 +183,7 @@ function downloadAllExcel(){
   XLSX.writeFile(wb, `All_Registrations.xlsx`);
 }
 
-renderEvents();
+fetchEvents();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
