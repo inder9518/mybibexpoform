@@ -57,12 +57,12 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 <h5>📝 Register for Event</h5>
 <form id="regForm" class="row g-3">
 <div class="col-md-6"><label class="form-label">Select Event</label><select id="eventSelect" class="form-control" required></select></div>
-<div class="col-md-6"><label class="form-label">Name</label><input type="text" id="name" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">Naam</label><input type="text" id="name" class="form-control" required></div>
 <div class="col-md-6"><label class="form-label">Gender</label><br>
 <div class="form-check form-check-inline"><input type="radio" name="gender" value="Male" class="form-check-input" required><label class="form-check-label">Male</label></div>
 <div class="form-check form-check-inline"><input type="radio" name="gender" value="Female" class="form-check-input"><label class="form-check-label">Female</label></div></div>
-<div class="col-md-6"><label class="form-label">Mobile no.</label><input type="tel" id="mobile" class="form-control" pattern="[0-9]{10}" required></div>
-<div class="col-md-6"><label class="form-label">Email id</label><input type="email" id="email" class="form-control" required></div>
+<div class="col-md-6"><label class="form-label">Mobile</label><input type="tel" id="mobile" class="form-control" pattern="[0-9]{10}" required></div>
+<div class="col-md-6"><label class="form-label">Email</label><input type="email" id="email" class="form-control" required></div>
 <div class="col-md-6"><label class="form-label">DOB</label><input type="date" id="dob" class="form-control" required></div>
 <div class="col-md-6"><label class="form-label">Race Name</label><input type="text" id="race" class="form-control" required></div>
 <div class="col-md-6"><label class="form-label">Bib Number</label><input type="number" id="bib" class="form-control" required></div>
@@ -97,7 +97,7 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 
 <script>
 const SHEET_URL="https://script.google.com/macros/s/AKfycbyjHcfSubW5I-dmjVx-ZV9Oa04Z3H-f52qjlBAdhTaoRCrwSiQ84S98PrjOhSgec3uYCQ/exec";
-let events=[], registrations=[];
+let cache={events:[], registrations:[]};
 
 function formatDate(dob){
   let date=new Date(dob);
@@ -107,73 +107,87 @@ function formatDate(dob){
   return `${day}-${month}-${year}`;
 }
 
-async function fetchEvents(){
-  let res=await fetch(SHEET_URL+"?type=events");
+// Fetch all data once for fast sync
+async function fetchAllData(){
+  let res=await fetch(SHEET_URL+"?type=all");
   let data=await res.json();
-  events=data.map(e=>({name:e[0],date:e[1],location:e[2]}));
+  cache.events=data.events.map(e=>({name:e[0],date:e[1],location:e[2]}));
+  cache.registrations=data.registrations.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],race:r[6],bib:r[7]}));
+  renderEvents();
+  renderRegistrations();
+}
+
+// Render events table and selects
+function renderEvents(){
   let eventTable=document.querySelector("#eventTable tbody");
   let eventSelect=document.getElementById("eventSelect");
   let viewSelect=document.getElementById("viewEventSelect");
   let exportSelect=document.getElementById("exportEventSelect");
   eventTable.innerHTML=""; eventSelect.innerHTML=""; viewSelect.innerHTML=""; exportSelect.innerHTML="";
-  events.forEach(ev=>{
+  cache.events.forEach(ev=>{
     eventTable.innerHTML+=`<tr><td>${ev.name}</td><td>${ev.date}</td><td>${ev.location}</td><td><button class="btn btn-sm btn-danger" onclick="deleteEvent('${ev.name}')">Delete</button></td></tr>`;
     eventSelect.innerHTML+=`<option value="${ev.name}">${ev.name}</option>`;
     viewSelect.innerHTML+=`<option value="${ev.name}">${ev.name}</option>`;
     exportSelect.innerHTML+=`<option value="${ev.name}">${ev.name}</option>`;
   });
-  fetchRegistrations();
 }
 
-async function fetchRegistrations(){
-  let selected=document.getElementById("viewEventSelect")?.value||"";
-  let res=await fetch(SHEET_URL+"?type=registrations&event="+selected);
-  let data=await res.json();
-  registrations=data.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],race:r[6],bib:r[7]}));
-  renderRegistrations();
-}
-
+// Render registrations for selected event
 function renderRegistrations(){
   let selected=document.getElementById("viewEventSelect")?.value;
   let tableBody=document.querySelector("#registrationTable tbody");
   if(!tableBody) return;
   tableBody.innerHTML="";
-  registrations.filter(r=>r.event===selected).forEach(r=>{
-    tableBody.innerHTML+=`<tr><td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td><td>${formatDate(r.dob)}</td><td>${r.race}</td><td>${r.bib}</td><td><button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.event}','${r.name}','${r.bib}')">Delete</button></td></tr>`;
+  cache.registrations.filter(r=>r.event===selected).forEach(r=>{
+    tableBody.innerHTML+=`<tr>
+      <td>${r.name}</td>
+      <td>${r.gender}</td>
+      <td>${r.mobile}</td>
+      <td>${r.email}</td>
+      <td>${formatDate(r.dob)}</td>
+      <td>${r.race}</td>
+      <td>${r.bib}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.event}','${r.name}','${r.bib}')">Delete</button></td>
+    </tr>`;
   });
 }
 
+// Delete event
 async function deleteEvent(name){
   if(!confirm(`Delete event "${name}" and all its registrations?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteEvent",name})});
-  fetchEvents();
+  await fetchAllData();
 }
 
+// Delete registration
 async function deleteRegistration(event,name,bib){
   if(!confirm(`Delete registration of ${name}?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteRegistration",event,name,bib})});
-  fetchRegistrations();
+  await fetchAllData();
 }
 
+// Event form submit
 document.getElementById("eventForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(ev)});
   document.getElementById("eventForm").reset();
-  fetchEvents();
+  await fetchAllData();
 });
 
+// Registration form submit
 document.getElementById("regForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,race:document.getElementById("race").value,bib:document.getElementById("bib").value};
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(reg)});
   document.getElementById("regForm").reset();
-  fetchRegistrations();
+  await fetchAllData();
 });
 
+// Export functions with DOB formatted
 function downloadEventExcel(){
   let sel=document.getElementById("exportEventSelect").value;
-  let data=registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
+  let data=cache.registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
   if(data.length===0){alert("No registrations for this event"); return;}
   let ws=XLSX.utils.json_to_sheet(data);
   let wb=XLSX.utils.book_new();
@@ -182,7 +196,7 @@ function downloadEventExcel(){
 }
 
 function downloadAllExcel(){
-  let data=registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
+  let data=cache.registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
   if(data.length===0){alert("No registrations"); return;}
   let ws=XLSX.utils.json_to_sheet(data);
   let wb=XLSX.utils.book_new();
@@ -190,7 +204,8 @@ function downloadAllExcel(){
   XLSX.writeFile(wb,"All_Registrations.xlsx");
 }
 
-fetchEvents();
+// Initial fetch
+fetchAllData();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
