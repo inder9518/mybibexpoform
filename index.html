@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Event Management System</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
-body { background: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
-header { background: linear-gradient(45deg, #007bff, #00c6ff); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
-.card { border-radius: 15px; transition: transform 0.2s ease-in-out; }
-.card:hover { transform: translateY(-3px); box-shadow: 0px 4px 20px rgba(0,0,0,0.1); }
-.nav-tabs .nav-link { font-weight: 500; }
-.nav-tabs .nav-link.active { background-color: #007bff; color: white !important; border-radius: 8px 8px 0 0; }
-.btn { border-radius: 8px; font-weight: 500; }
-.table { border-radius: 8px; overflow: hidden; }
-.table th { background: #007bff; color: white; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { background: #f4f6f9; font-family: 'Segoe UI', sans-serif; }
+    header { background: linear-gradient(45deg, #007bff, #00c6ff); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+    .card { border-radius: 15px; transition: transform 0.2s ease-in-out; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0px 4px 20px rgba(0,0,0,0.1); }
+    .nav-tabs .nav-link { font-weight: 500; }
+    .nav-tabs .nav-link.active { background-color: #007bff; color: white !important; border-radius: 8px 8px 0 0; }
+    .btn { border-radius: 8px; font-weight: 500; }
+    .table { border-radius: 8px; overflow: hidden; }
+    .table th { background: #007bff; color: white; }
+  </style>
 </head>
 <body>
 
@@ -166,7 +166,7 @@ let events = JSON.parse(localStorage.getItem("events")) || [];
 let registrations = JSON.parse(localStorage.getItem("registrations")) || [];
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbzDd2fXT34MUrP3XmzfIsNVIJcw0HZ4hYJiFoPpA_vAiqVhWQpA5GT_ga665dcepFMG/exec";
 
-function renderEvents() {
+function renderEvents(){
   let eventTable = document.querySelector("#eventTable tbody");
   let eventSelect = document.getElementById("eventSelect");
   let exportEventSelect = document.getElementById("exportEventSelect");
@@ -176,7 +176,7 @@ function renderEvents() {
   exportEventSelect.innerHTML = "";
   viewEventSelect.innerHTML = "";
 
-  events.forEach((ev, index) => {
+  events.forEach((ev,index)=>{
     eventTable.innerHTML += `<tr>
       <td>${ev.name}</td>
       <td>${ev.date}</td>
@@ -195,9 +195,9 @@ function renderEvents() {
 }
 
 function deleteEvent(index){
-  if(confirm("Are you sure to delete this event?")){
+  if(confirm("Delete this event?")){
     events.splice(index,1);
-    localStorage.setItem("events", JSON.stringify(events));
+    localStorage.setItem("events",JSON.stringify(events));
     renderEvents();
   }
 }
@@ -210,7 +210,7 @@ function editEvent(index){
   deleteEvent(index);
 }
 
-document.getElementById("eventForm").addEventListener("submit", function(e){
+document.getElementById("eventForm").addEventListener("submit",function(e){
   e.preventDefault();
   let event = {
     name: document.getElementById("eventName").value,
@@ -218,12 +218,12 @@ document.getElementById("eventForm").addEventListener("submit", function(e){
     location: document.getElementById("eventLocation").value
   };
   events.push(event);
-  localStorage.setItem("events", JSON.stringify(events));
+  localStorage.setItem("events",JSON.stringify(events));
   renderEvents();
   this.reset();
 });
 
-document.getElementById("regForm").addEventListener("submit", function(e){
+document.getElementById("regForm").addEventListener("submit",function(e){
   e.preventDefault();
   let reg = {
     event: document.getElementById("eventSelect").value,
@@ -236,7 +236,7 @@ document.getElementById("regForm").addEventListener("submit", function(e){
     bib: document.getElementById("bib").value
   };
   registrations.push(reg);
-  localStorage.setItem("registrations", JSON.stringify(registrations));
+  localStorage.setItem("registrations",JSON.stringify(registrations));
   sendToSheet(reg);
   this.reset();
   alert("✅ Registration Saved!");
@@ -247,54 +247,48 @@ function renderRegistrations(){
   let selected = document.getElementById("viewEventSelect").value;
   let tableBody = document.querySelector("#registrationTable tbody");
   tableBody.innerHTML = "";
-  registrations.filter(r => r.event === selected).forEach((r, idx)=>{
+  registrations.filter(r=>r.event===selected).forEach((r,idx)=>{
     tableBody.innerHTML += `<tr>
-      <td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td><td>${r.dob}</td><td>${r.race}</td><td>${r.bib}</td>
+      <td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td>
+      <td>${r.dob}</td><td>${r.race}</td><td>${r.bib}</td>
       <td><button class="btn btn-sm btn-danger" onclick="deleteRegistration(${idx})">Delete</button></td>
     </tr>`;
   });
 }
 
 function deleteRegistration(idx){
-  if(confirm("Are you sure to delete this registration?")){
+  if(confirm("Delete this registration?")){
     registrations.splice(idx,1);
-    localStorage.setItem("registrations", JSON.stringify(registrations));
+    localStorage.setItem("registrations",JSON.stringify(registrations));
     renderRegistrations();
   }
 }
 
-function sendToSheet(reg){
+function sendToSheet(data){
   fetch(SHEET_URL,{
     method:"POST",
-    body: JSON.stringify(reg),
-    headers: {"Content-Type":"application/json"}
-  })
-  .then(res=>res.json())
-  .then(data=>console.log(data))
-  .catch(err=>console.log("Error sending to sheet",err));
+    body: JSON.stringify(data)
+  }).then(res=>res.json()).then(res=>{
+    console.log("Saved to Google Sheet",res);
+  }).catch(err=>console.log("Error",err));
 }
 
 function downloadEventExcel(){
-  let eventName = document.getElementById("exportEventSelect").value;
-  let data = registrations.filter(r=>r.event===eventName);
+  let selected = document.getElementById("exportEventSelect").value;
+  let data = registrations.filter(r=>r.event===selected);
+  if(data.length===0){ alert("No registrations for this event"); return; }
   let ws = XLSX.utils.json_to_sheet(data);
   let wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Registrations");
-  XLSX.writeFile(wb, eventName+"_registrations.xlsx");
+  XLSX.writeFile(wb, `${selected}_Registrations.xlsx`);
 }
 
 function downloadAllExcel(){
+  if(registrations.length===0){ alert("No registrations"); return; }
+  let ws = XLSX.utils.json_to_sheet(registrations);
   let wb = XLSX.utils.book_new();
-  let grouped = {};
-  registrations.forEach(r=>{
-    if(!grouped[r.event]) grouped[r.event]=[];
-    grouped[r.event].push(r);
-  });
-  for(let key in grouped){
-    let ws = XLSX.utils.json_to_sheet(grouped[key]);
-    XLSX.utils.book_append_sheet(wb, ws, key);
-  }
-  XLSX.writeFile(wb, "All_Registrations.xlsx");
+  XLSX.utils.book_append_sheet(wb, ws, "All Registrations");
+  XLSX.writeFile(wb, `All_Registrations.xlsx`);
 }
 
 renderEvents();
