@@ -99,7 +99,14 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 const SHEET_URL="https://script.google.com/macros/s/AKfycbyjHcfSubW5I-dmjVx-ZV9Oa04Z3H-f52qjlBAdhTaoRCrwSiQ84S98PrjOhSgec3uYCQ/exec";
 let events=[], registrations=[];
 
-// Fetch Events
+function formatDate(dob){
+  let date=new Date(dob);
+  let day=String(date.getDate()).padStart(2,'0');
+  let month=String(date.getMonth()+1).padStart(2,'0');
+  let year=date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
 async function fetchEvents(){
   let res=await fetch(SHEET_URL+"?type=events");
   let data=await res.json();
@@ -118,7 +125,6 @@ async function fetchEvents(){
   fetchRegistrations();
 }
 
-// Fetch Registrations
 async function fetchRegistrations(){
   let selected=document.getElementById("viewEventSelect")?.value||"";
   let res=await fetch(SHEET_URL+"?type=registrations&event="+selected);
@@ -127,32 +133,28 @@ async function fetchRegistrations(){
   renderRegistrations();
 }
 
-// Render Registrations Table
 function renderRegistrations(){
   let selected=document.getElementById("viewEventSelect")?.value;
   let tableBody=document.querySelector("#registrationTable tbody");
   if(!tableBody) return;
   tableBody.innerHTML="";
   registrations.filter(r=>r.event===selected).forEach(r=>{
-    tableBody.innerHTML+=`<tr><td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td><td>${r.dob}</td><td>${r.race}</td><td>${r.bib}</td><td><button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.event}','${r.name}','${r.bib}')">Delete</button></td></tr>`;
+    tableBody.innerHTML+=`<tr><td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td><td>${formatDate(r.dob)}</td><td>${r.race}</td><td>${r.bib}</td><td><button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.event}','${r.name}','${r.bib}')">Delete</button></td></tr>`;
   });
 }
 
-// Delete Event
 async function deleteEvent(name){
   if(!confirm(`Delete event "${name}" and all its registrations?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteEvent",name})});
   fetchEvents();
 }
 
-// Delete Registration
 async function deleteRegistration(event,name,bib){
   if(!confirm(`Delete registration of ${name}?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteRegistration",event,name,bib})});
   fetchRegistrations();
 }
 
-// Event Form Submit
 document.getElementById("eventForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
@@ -161,7 +163,6 @@ document.getElementById("eventForm").addEventListener("submit",async e=>{
   fetchEvents();
 });
 
-// Registration Form Submit
 document.getElementById("regForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,race:document.getElementById("race").value,bib:document.getElementById("bib").value};
@@ -170,10 +171,9 @@ document.getElementById("regForm").addEventListener("submit",async e=>{
   fetchRegistrations();
 });
 
-// Download Excel
 function downloadEventExcel(){
   let sel=document.getElementById("exportEventSelect").value;
-  let data=registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:r.dob,Race:r.race,Bib:r.bib}));
+  let data=registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
   if(data.length===0){alert("No registrations for this event"); return;}
   let ws=XLSX.utils.json_to_sheet(data);
   let wb=XLSX.utils.book_new();
@@ -182,7 +182,7 @@ function downloadEventExcel(){
 }
 
 function downloadAllExcel(){
-  let data=registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:r.dob,Race:r.race,Bib:r.bib}));
+  let data=registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
   if(data.length===0){alert("No registrations"); return;}
   let ws=XLSX.utils.json_to_sheet(data);
   let wb=XLSX.utils.book_new();
@@ -190,7 +190,6 @@ function downloadAllExcel(){
   XLSX.writeFile(wb,"All_Registrations.xlsx");
 }
 
-// Initial Fetch
 fetchEvents();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
