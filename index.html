@@ -96,7 +96,7 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 </div>
 
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbyjHcfSubW5I-dmjVx-ZV9Oa04Z3H-f52qjlBAdhTaoRCrwSiQ84S98PrjOhSgec3uYCQ/exec";
+const SHEET_URL="https://script.google.com/macros/s/AKfycbywmQAnbNhnuMpyWzTeplQ-cumGGDDFNmxlBchYsJ31rV8V3dQUeA7Pwu3R8DwF2PE51Q/exec";
 let cache={events:[], registrations:[]};
 
 function formatDate(dob){
@@ -107,7 +107,6 @@ function formatDate(dob){
   return `${day}-${month}-${year}`;
 }
 
-// Fetch all data once for fast sync
 async function fetchAllData(){
   let res=await fetch(SHEET_URL+"?type=all");
   let data=await res.json();
@@ -117,7 +116,6 @@ async function fetchAllData(){
   renderRegistrations();
 }
 
-// Render events table and selects
 function renderEvents(){
   let eventTable=document.querySelector("#eventTable tbody");
   let eventSelect=document.getElementById("eventSelect");
@@ -132,7 +130,6 @@ function renderEvents(){
   });
 }
 
-// Render registrations for selected event
 function renderRegistrations(){
   let selected=document.getElementById("viewEventSelect")?.value;
   let tableBody=document.querySelector("#registrationTable tbody");
@@ -152,21 +149,18 @@ function renderRegistrations(){
   });
 }
 
-// Delete event
 async function deleteEvent(name){
   if(!confirm(`Delete event "${name}" and all its registrations?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteEvent",name})});
   await fetchAllData();
 }
 
-// Delete registration
 async function deleteRegistration(event,name,bib){
   if(!confirm(`Delete registration of ${name}?`)) return;
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteRegistration",event,name,bib})});
   await fetchAllData();
 }
 
-// Event form submit
 document.getElementById("eventForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
@@ -175,7 +169,6 @@ document.getElementById("eventForm").addEventListener("submit",async e=>{
   await fetchAllData();
 });
 
-// Registration form submit
 document.getElementById("regForm").addEventListener("submit",async e=>{
   e.preventDefault();
   let reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,race:document.getElementById("race").value,bib:document.getElementById("bib").value};
@@ -184,7 +177,6 @@ document.getElementById("regForm").addEventListener("submit",async e=>{
   await fetchAllData();
 });
 
-// Export functions with DOB formatted
 function downloadEventExcel(){
   let sel=document.getElementById("exportEventSelect").value;
   let data=cache.registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
@@ -204,7 +196,6 @@ function downloadAllExcel(){
   XLSX.writeFile(wb,"All_Registrations.xlsx");
 }
 
-// Initial fetch
 fetchAllData();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
