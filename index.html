@@ -64,7 +64,6 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 <div class="col-md-6"><label class="form-label">Mobile</label><input type="tel" id="mobile" class="form-control" pattern="[0-9]{10}" required></div>
 <div class="col-md-6"><label class="form-label">Email</label><input type="email" id="email" class="form-control" required></div>
 <div class="col-md-6"><label class="form-label">DOB</label><input type="date" id="dob" class="form-control" required></div>
-<div class="col-md-6"><label class="form-label">Race Name</label><input type="text" id="race" class="form-control" placeholder="" required></div>
 <div class="col-md-6"><label class="form-label">Bib Number</label><input type="number" id="bib" class="form-control" required></div>
 <div class="col-12"><button type="submit" class="btn btn-success w-100">Register</button></div>
 </form>
@@ -79,7 +78,7 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 <div class="col-md-6"><select id="viewEventSelect" class="form-control"></select></div>
 <div class="col-md-6"><button class="btn btn-secondary w-100" onclick="renderRegistrations()">View</button></div>
 </div>
-<div class="table-responsive"><table class="table table-bordered text-center" id="registrationTable"><thead><tr><th>Name</th><th>Gender</th><th>Mobile</th><th>Email</th><th>DOB</th><th>Race</th><th>Bib</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+<div class="table-responsive"><table class="table table-bordered text-center" id="registrationTable"><thead><tr><th>Name</th><th>Gender</th><th>Mobile</th><th>Email</th><th>DOB</th><th>Bib</th><th>Action</th></tr></thead><tbody></tbody></table></div>
 </div>
 </div>
 
@@ -96,19 +95,19 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 </div>
 
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbwpXwj1sJ0OKAwqg5FAV4Pck3o4VPoAsgYnEGu2qcdOtlR3RFSTD-Z6WSwjI8H7-D_AWg/exec";
+const SHEET_URL="https://script.google.com/macros/s/AKfycbxetc7w2njZzxzHl9DHrCjdhSVGMra6nMj01UdVi9N-R73-0VvQACIp3AI_RkVI-QhfBQ/exec";
 let cache={events:[], registrations:[]};
 
 function formatDate(dob){
-  let d=new Date(dob);
+  const d=new Date(dob);
   return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
 }
 
 async function fetchAllData(){
-  let res=await fetch(SHEET_URL+"?type=all");
-  let data=await res.json();
+  const res=await fetch(SHEET_URL+"?type=all");
+  const data=await res.json();
   cache.events=data.events.map(e=>({name:e[0],date:e[1],location:e[2]}));
-  cache.registrations=data.registrations.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],race:r[6],bib:r[7]}));
+  cache.registrations=data.registrations.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],bib:r[6]}));
   renderEvents();
   renderRegistrations();
 }
@@ -129,13 +128,13 @@ function renderEvents(){
 }
 
 function renderRegistrations(){
-  let selected=document.getElementById("viewEventSelect")?.value;
-  let tbody=document.querySelector("#registrationTable tbody");
+  const selected=document.getElementById("viewEventSelect")?.value;
+  const tbody=document.querySelector("#registrationTable tbody");
   tbody.innerHTML="";
   cache.registrations.filter(r=>!selected||r.event===selected).forEach(r=>{
-    let tr=document.createElement("tr");
+    const tr=document.createElement("tr");
     tr.innerHTML=`<td>${r.name}</td><td>${r.gender}</td><td>${r.mobile}</td><td>${r.email}</td>
-      <td>${formatDate(r.dob)}</td><td>${r.race}</td><td>${r.bib}</td>
+      <td>${formatDate(r.dob)}</td><td>${r.bib}</td>
       <td><button class="btn btn-sm btn-danger" onclick="deleteRegistration('${r.event}','${r.name}','${r.bib}')">Delete</button></td>`;
     tbody.appendChild(tr);
   });
@@ -153,37 +152,45 @@ async function deleteRegistration(event,name,bib){
   await fetchAllData();
 }
 
+// Event creation
 document.getElementById("eventForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  let ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
+  const btn=e.target.querySelector("button[type='submit']");
+  btn.disabled=true;
+  const ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(ev)});
-  document.getElementById("eventForm").reset();
+  e.target.reset();
+  btn.disabled=false;
   await fetchAllData();
 });
 
+// Registration
 document.getElementById("regForm").addEventListener("submit",async e=>{
   e.preventDefault();
-  let reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,race:document.getElementById("race").value,bib:document.getElementById("bib").value};
+  const btn=e.target.querySelector("button[type='submit']");
+  btn.disabled=true;
+  const reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,bib:document.getElementById("bib").value};
   await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(reg)});
-  document.getElementById("regForm").reset();
+  e.target.reset();
+  btn.disabled=false;
   await fetchAllData();
 });
 
 function downloadEventExcel(){
-  let sel=document.getElementById("exportEventSelect").value;
-  let data=cache.registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
+  const sel=document.getElementById("exportEventSelect").value;
+  const data=cache.registrations.filter(r=>r.event===sel).map(r=>({Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Bib:r.bib}));
   if(data.length===0){alert("No registrations for this event"); return;}
-  let ws=XLSX.utils.json_to_sheet(data);
-  let wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,sel);
   XLSX.writeFile(wb,sel+"_registrations.xlsx");
 }
 
 function downloadAllExcel(){
-  let data=cache.registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Race:r.race,Bib:r.bib}));
+  const data=cache.registrations.map(r=>({Event:r.event,Name:r.name,Gender:r.gender,Mobile:r.mobile,Email:r.email,DOB:formatDate(r.dob),Bib:r.bib}));
   if(data.length===0){alert("No registrations"); return;}
-  let ws=XLSX.utils.json_to_sheet(data);
-  let wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(data);
+  const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"AllRegistrations");
   XLSX.writeFile(wb,"All_Registrations.xlsx");
 }
