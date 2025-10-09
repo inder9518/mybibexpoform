@@ -22,7 +22,7 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 <div class="container py-4">
 <header>
 <h2>📌 Event Management System</h2>
-<p style="margin:0;">Fast Sync Google Sheet Integration</p>
+<p style="margin:0;">Local Storage Based (No Backend)</p>
 </header>
 
 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
@@ -95,21 +95,23 @@ header{background:linear-gradient(45deg,#007bff,#00c6ff);color:white;padding:20p
 </div>
 
 <script>
-const SHEET_URL="https://script.google.com/macros/s/AKfycbxetc7w2njZzxzHl9DHrCjdhSVGMra6nMj01UdVi9N-R73-0VvQACIp3AI_RkVI-QhfBQ/exec";
-let cache={events:[], registrations:[]};
+let cache = { events: [], registrations: [] };
+
+function saveData() {
+  localStorage.setItem("events", JSON.stringify(cache.events));
+  localStorage.setItem("registrations", JSON.stringify(cache.registrations));
+}
+
+function loadData() {
+  cache.events = JSON.parse(localStorage.getItem("events") || "[]");
+  cache.registrations = JSON.parse(localStorage.getItem("registrations") || "[]");
+  renderEvents();
+  renderRegistrations();
+}
 
 function formatDate(dob){
   const d=new Date(dob);
   return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
-}
-
-async function fetchAllData(){
-  const res=await fetch(SHEET_URL+"?type=all");
-  const data=await res.json();
-  cache.events=data.events.map(e=>({name:e[0],date:e[1],location:e[2]}));
-  cache.registrations=data.registrations.map(r=>({event:r[0],name:r[1],gender:r[2],mobile:r[3],email:r[4],dob:r[5],bib:r[6]}));
-  renderEvents();
-  renderRegistrations();
 }
 
 function renderEvents(){
@@ -140,40 +142,49 @@ function renderRegistrations(){
   });
 }
 
-async function deleteEvent(name){
+function deleteEvent(name){
   if(!confirm(`Delete event "${name}" and all registrations?`)) return;
-  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteEvent",name})});
-  await fetchAllData();
+  cache.events = cache.events.filter(e => e.name !== name);
+  cache.registrations = cache.registrations.filter(r => r.event !== name);
+  saveData(); renderEvents(); renderRegistrations();
 }
 
-async function deleteRegistration(event,name,bib){
+function deleteRegistration(event,name,bib){
   if(!confirm(`Delete registration of ${name}?`)) return;
-  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify({type:"deleteRegistration",event,name,bib})});
-  await fetchAllData();
+  cache.registrations = cache.registrations.filter(r => !(r.event===event && r.name===name && r.bib==bib));
+  saveData(); renderRegistrations();
 }
 
 // Event creation
-document.getElementById("eventForm").addEventListener("submit",async e=>{
+document.getElementById("eventForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const btn=e.target.querySelector("button[type='submit']");
-  btn.disabled=true;
-  const ev={type:"event",name:document.getElementById("eventName").value,date:document.getElementById("eventDate").value,location:document.getElementById("eventLocation").value};
-  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(ev)});
+  const ev={
+    name:document.getElementById("eventName").value,
+    date:document.getElementById("eventDate").value,
+    location:document.getElementById("eventLocation").value
+  };
+  cache.events.push(ev);
+  saveData();
   e.target.reset();
-  btn.disabled=false;
-  await fetchAllData();
+  renderEvents();
 });
 
 // Registration
-document.getElementById("regForm").addEventListener("submit",async e=>{
+document.getElementById("regForm").addEventListener("submit",e=>{
   e.preventDefault();
-  const btn=e.target.querySelector("button[type='submit']");
-  btn.disabled=true;
-  const reg={type:"registration",event:document.getElementById("eventSelect").value,name:document.getElementById("name").value,gender:document.querySelector("input[name='gender']:checked").value,mobile:document.getElementById("mobile").value,email:document.getElementById("email").value,dob:document.getElementById("dob").value,bib:document.getElementById("bib").value};
-  await fetch(SHEET_URL,{method:"POST",body:JSON.stringify(reg)});
+  const reg={
+    event:document.getElementById("eventSelect").value,
+    name:document.getElementById("name").value,
+    gender:document.querySelector("input[name='gender']:checked").value,
+    mobile:document.getElementById("mobile").value,
+    email:document.getElementById("email").value,
+    dob:document.getElementById("dob").value,
+    bib:document.getElementById("bib").value
+  };
+  cache.registrations.push(reg);
+  saveData();
   e.target.reset();
-  btn.disabled=false;
-  await fetchAllData();
+  renderRegistrations();
 });
 
 function downloadEventExcel(){
@@ -195,7 +206,7 @@ function downloadAllExcel(){
   XLSX.writeFile(wb,"All_Registrations.xlsx");
 }
 
-fetchAllData();
+loadData();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
