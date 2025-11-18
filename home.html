@@ -3,18 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store</title>
+    <title>Store (Fixed Badge)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
         /* --- 1. GENERAL --- */
-        body { 
-            margin: 0; 
-            font-family: Arial, sans-serif; 
-            background-color: #f4f4f4; 
-            padding-top: 110px; 
-            transition: overflow 0.3s ease; 
-        }
+        body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; padding-top: 110px; transition: overflow 0.3s ease; }
         body.body-no-scroll { overflow: hidden; }
 
         /* --- HEADER --- */
@@ -26,29 +20,12 @@
 
         /* --- CONTENT --- */
         .content { padding: 15px; max-width: 1200px; margin: 0 auto; }
-        
-        /* 💡 YAHAN CHANGE KIYA HAI: Heading Style */
-        .content h2 {
-            text-align: center;        /* Center mein layega */
-            text-transform: uppercase; /* Saare letters CAPITAL honge */
-            font-weight: bold;         /* Mota text (Bold) */
-            text-decoration: underline;/* Niche line aayegi */
-            margin-top: 20px;          /* Upar thoda gap */
-            margin-bottom: 25px;       /* Niche thoda gap */
-            color: #333;               /* Dark color */
-            font-size: 2rem;           /* Size thoda bada */
-        }
-
+        .content h2 { text-align: center; text-transform: uppercase; font-weight: bold; text-decoration: underline; margin-top: 20px; margin-bottom: 25px; color: #333; font-size: 2rem; }
         .hero-banner { width: 100%; margin-bottom: 30px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
         
         /* --- PRODUCT GRID --- */
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 20px; 
-            min-height: 300px; 
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 300px; }
         .product-card { background-color: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s ease; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-5px); }
         .product-image { width: 100%; height: 200px; object-fit: cover; cursor: pointer; }
@@ -58,23 +35,8 @@
         .add-to-cart-btn { background-color: #28a745; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: bold; }
 
         /* --- FOOTER --- */
-        .footer-nav { 
-            background-color: #333; 
-            padding: 10px; 
-            border-radius: 30px; 
-            display: flex; 
-            gap: 10px; 
-            position: fixed; 
-            bottom: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 999; 
-            transition: transform 0.4s ease-out; 
-        }
-        
-        .footer-nav.footer-hidden { 
-            transform: translateX(-50%) translateY(150%); 
-        }
+        .footer-nav { background-color: #333; padding: 10px; border-radius: 30px; display: flex; gap: 10px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s ease-out; }
+        .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
         
         .footer-nav .nav-button { 
             background-color: #007bff; 
@@ -84,48 +46,87 @@
             text-decoration: none; 
             font-weight: bold; 
             cursor: pointer; 
+            
+            /* 💡 ZAROORI: Relative position taaki badge iske hisaab se set ho */
             position: relative; 
+            overflow: visible; /* Taaki badge button ke bahar nikle to kate nahi */
         }
-        .cart-count-badge { background-color: #ff4d4d; color: white; border-radius: 10px; padding: 2px 6px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; display: none; }
-        .cart-count-badge.active { display: inline-block; }
+
+        /* 💡 YAHAN FIX KIYA HAI: BADGE STYLE */
+        .cart-count-badge { 
+            position: absolute; /* Button ke upar tairta hua */
+            top: -5px;          /* Thoda upar */
+            right: -5px;        /* Thoda right */
+            
+            background-color: #ff4d4d; 
+            color: white; 
+            border-radius: 10px; /* Pill shape */
+            
+            /* Size fix */
+            min-width: 18px; 
+            height: 18px;
+            padding: 2px 5px; /* Padding taaki double digit fit aaye */
+             
+            /* Text Centering */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            z-index: 10;
+            
+            /* Default hide (JS se active hoga) */
+            display: none; 
+        }
+        
+        /* Jab badge active ho, to Flex ban jaaye taaki center rahe */
+        .cart-count-badge.active { display: flex; }
 
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
-        .modal-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2rem; cursor: pointer; color: #888; }
+        .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
+
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
-        .cart-item { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-        .cart-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
-        .cart-item-info { flex-grow: 1; margin-left: 15px; }
+        .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .cart-item-info { flex-grow: 1; display: flex; flex-direction: column; }
+        .cart-item-info h4 { margin: 0 0 5px 0; font-size: 1rem; white-space: normal; word-wrap: break-word; }
+        .cart-item-info p { margin: 0 0 10px 0; color: #0056b3; font-weight: bold; }
+        .cart-qty-controls { display: flex; align-items: center; }
+        .cart-qty-controls button { background-color: #f0f0f0; color: #333; border: 1px solid #ccc; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .cart-qty-controls span { margin: 0 15px; font-size: 1.1rem; font-weight: bold; }
         .cart-total { margin-top: 20px; text-align: right; font-size: 1.3rem; font-weight: bold; border-top: 2px solid #eee; padding-top: 10px; }
+
+        /* Cart Actions */
+        .cart-actions { display: flex; gap: 10px; margin-top: 20px; }
+        #whatsapp-order-btn { flex: 2; background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        #clear-cart-btn { flex: 1; background-color: #ff4d4d; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        #clear-cart-btn:hover { background-color: #cc0000; }
+
+        /* Common */
         #toast-overlay { background: transparent; pointer-events: none; }
         .toast-popup { background-color: white; color: #333; padding: 15px 30px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.1rem; font-weight: bold; pointer-events: auto; }
         #user-form-modal form { display: flex; flex-direction: column; gap: 15px; }
         #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
-        #user-form-modal .submit-btn, #whatsapp-order-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
-        /* --- MEDIA QUERIES --- */
-        @media (max-width: 900px) {
-            .product-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
+        /* Media Queries */
+        @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) {
             body { padding-top: 85px; }
-            
             .curved-header { padding: 15px 20px; border-radius: 25px; top: 10px; left: 10px; right: 10px; }
             .header-logo { max-width: 100px; max-height: 40px; }
             .social-media-icons a { font-size: 1.3rem; }
-            
-            /* Phone: 2 Columns */
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .product-image { height: 150px; }
             .product-info { padding: 10px; }
             .product-info h3 { font-size: 0.9rem; }
             .product-price { font-size: 1rem; }
             .add-to-cart-btn { padding: 8px; font-size: 0.8rem; }
-
             .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
         }
     </style>
@@ -157,7 +158,8 @@
     <footer class="footer-nav" id="footer-nav">
         <a class="nav-button" onclick="window.scrollTo(0,0)">Home</a>
         <a class="nav-button" id="cart-open-btn">
-            Cart <span class="cart-count-badge" id="cart-count-badge">0</span>
+            Cart 
+            <span class="cart-count-badge" id="cart-count-badge">0</span>
         </a>
     </footer>
 
@@ -167,7 +169,10 @@
             <h2>Your Cart</h2>
             <div id="cart-items-list"></div>
             <div class="cart-total" id="cart-total">Total: ₹0.00</div>
-            <button id="whatsapp-order-btn">Order via WhatsApp</button>
+            <div class="cart-actions">
+                <button id="whatsapp-order-btn">Order via WhatsApp</button>
+                <button id="clear-cart-btn">Clear Cart</button>
+            </div>
         </div>
     </div>
 
@@ -298,11 +303,11 @@
                             <div class="cart-item-info">
                                 <h4>${p.name}</h4>
                                 <p>₹${cost}</p>
-                            </div>
-                            <div>
-                                <button onclick="changeQty(${c.id}, -1)">-</button>
-                                <span style="margin:0 10px">${c.qty}</span>
-                                <button onclick="changeQty(${c.id}, 1)">+</button>
+                                <div class="cart-qty-controls">
+                                    <button onclick="changeQty(${c.id}, -1)">-</button>
+                                    <span>${c.qty}</span>
+                                    <button onclick="changeQty(${c.id}, 1)">+</button>
+                                </div>
                             </div>
                         </div>`;
                 }
@@ -324,7 +329,12 @@
             const count = cart.reduce((a, b) => a + b.qty, 0);
             const badge = document.getElementById("cart-count-badge");
             badge.innerText = count;
-            badge.style.display = count > 0 ? "inline-block" : "none";
+            // CSS mein "display: none" hai, JS mein "display: flex" karna hai taaki center align rahe
+            if (count > 0) {
+                badge.style.display = "flex"; 
+            } else {
+                badge.style.display = "none";
+            }
         }
 
         function openModal(id) { document.getElementById(id).classList.add("active"); document.body.classList.add("body-no-scroll"); }
@@ -333,7 +343,23 @@
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("cart-close-btn").onclick = () => closeModal("cart-overlay");
         document.getElementById("product-info-close-btn").onclick = () => closeModal("product-info-overlay");
-        document.getElementById("whatsapp-order-btn").onclick = () => { if(cart.length === 0) return alert("Cart empty"); closeModal("cart-overlay"); openModal("user-form-overlay"); };
+        
+        document.getElementById("whatsapp-order-btn").onclick = () => { 
+            if(cart.length === 0) return alert("Cart empty"); 
+            closeModal("cart-overlay"); 
+            openModal("user-form-overlay"); 
+        };
+
+        document.getElementById("clear-cart-btn").onclick = () => {
+            if(cart.length === 0) return;
+            if(confirm("Empty your cart?")) {
+                cart = [];
+                updateCount();
+                renderCart();
+                renderProducts();
+            }
+        };
+
         document.getElementById("form-close-btn").onclick = () => closeModal("user-form-overlay");
         document.querySelectorAll(".modal-overlay").forEach(o => { o.onclick = (e) => { if(e.target === o) closeModal(o.id); } });
 
