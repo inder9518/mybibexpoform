@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (Clear Cart Added)</title>
+    <title>Store (Fixed Badge)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -37,9 +37,51 @@
         /* --- FOOTER --- */
         .footer-nav { background-color: #333; padding: 10px; border-radius: 30px; display: flex; gap: 10px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s ease-out; }
         .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
-        .footer-nav .nav-button { background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; cursor: pointer; position: relative; }
-        .cart-count-badge { background-color: #ff4d4d; color: white; border-radius: 10px; padding: 2px 6px; font-size: 0.8rem; font-weight: bold; margin-left: 5px; display: none; }
-        .cart-count-badge.active { display: inline-block; }
+        
+        .footer-nav .nav-button { 
+            background-color: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            
+            /* 💡 ZAROORI: Relative position taaki badge iske hisaab se set ho */
+            position: relative; 
+            overflow: visible; /* Taaki badge button ke bahar nikle to kate nahi */
+        }
+
+        /* 💡 YAHAN FIX KIYA HAI: BADGE STYLE */
+        .cart-count-badge { 
+            position: absolute; /* Button ke upar tairta hua */
+            top: -5px;          /* Thoda upar */
+            right: -5px;        /* Thoda right */
+            
+            background-color: #ff4d4d; 
+            color: white; 
+            border-radius: 10px; /* Pill shape */
+            
+            /* Size fix */
+            min-width: 18px; 
+            height: 18px;
+            padding: 2px 5px; /* Padding taaki double digit fit aaye */
+             
+            /* Text Centering */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            z-index: 10;
+            
+            /* Default hide (JS se active hoga) */
+            display: none; 
+        }
+        
+        /* Jab badge active ho, to Flex ban jaaye taaki center rahe */
+        .cart-count-badge.active { display: flex; }
 
         /* --- MODALS --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
@@ -48,8 +90,6 @@
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
 
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
-        
-        /* Cart Styles */
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-item img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
@@ -61,38 +101,10 @@
         .cart-qty-controls span { margin: 0 15px; font-size: 1.1rem; font-weight: bold; }
         .cart-total { margin-top: 20px; text-align: right; font-size: 1.3rem; font-weight: bold; border-top: 2px solid #eee; padding-top: 10px; }
 
-        /* 💡 NEW: CART BUTTONS CONTAINER */
-        .cart-actions {
-            display: flex;
-            gap: 10px; /* Buttons ke beech gap */
-            margin-top: 20px;
-        }
-
-        /* WhatsApp Button */
-        #whatsapp-order-btn { 
-            flex: 2; /* Yeh zyada jagah lega */
-            background-color: #25D366; 
-            color: white; 
-            border: none; 
-            padding: 12px; 
-            border-radius: 8px; 
-            font-size: 1rem; 
-            font-weight: bold; 
-            cursor: pointer; 
-        }
-
-        /* Clear Cart Button */
-        #clear-cart-btn {
-            flex: 1; /* Yeh kam jagah lega */
-            background-color: #ff4d4d; /* Red Color */
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        /* Cart Actions */
+        .cart-actions { display: flex; gap: 10px; margin-top: 20px; }
+        #whatsapp-order-btn { flex: 2; background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+        #clear-cart-btn { flex: 1; background-color: #ff4d4d; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         #clear-cart-btn:hover { background-color: #cc0000; }
 
         /* Common */
@@ -102,7 +114,7 @@
         #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
         #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
-        /* --- MEDIA QUERIES --- */
+        /* Media Queries */
         @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) {
             body { padding-top: 85px; }
@@ -146,7 +158,8 @@
     <footer class="footer-nav" id="footer-nav">
         <a class="nav-button" onclick="window.scrollTo(0,0)">Home</a>
         <a class="nav-button" id="cart-open-btn">
-            Cart <span class="cart-count-badge" id="cart-count-badge">0</span>
+            Cart 
+            <span class="cart-count-badge" id="cart-count-badge">0</span>
         </a>
     </footer>
 
@@ -156,7 +169,6 @@
             <h2>Your Cart</h2>
             <div id="cart-items-list"></div>
             <div class="cart-total" id="cart-total">Total: ₹0.00</div>
-            
             <div class="cart-actions">
                 <button id="whatsapp-order-btn">Order via WhatsApp</button>
                 <button id="clear-cart-btn">Clear Cart</button>
@@ -275,13 +287,11 @@
             const list = document.getElementById("cart-items-list");
             list.innerHTML = "";
             let total = 0;
-            
             if(cart.length === 0) {
                 list.innerHTML = "<p>Cart is empty.</p>";
                 document.getElementById("cart-total").innerText = "Total: ₹0";
                 return;
             }
-
             cart.forEach(c => {
                 const p = allProducts.find(x => x.id == c.id);
                 if(p) {
@@ -319,7 +329,12 @@
             const count = cart.reduce((a, b) => a + b.qty, 0);
             const badge = document.getElementById("cart-count-badge");
             badge.innerText = count;
-            badge.style.display = count > 0 ? "inline-block" : "none";
+            // CSS mein "display: none" hai, JS mein "display: flex" karna hai taaki center align rahe
+            if (count > 0) {
+                badge.style.display = "flex"; 
+            } else {
+                badge.style.display = "none";
+            }
         }
 
         function openModal(id) { document.getElementById(id).classList.add("active"); document.body.classList.add("body-no-scroll"); }
@@ -334,15 +349,14 @@
             closeModal("cart-overlay"); 
             openModal("user-form-overlay"); 
         };
-        
-        // 💡 CLEAR CART BUTTON LOGIC
+
         document.getElementById("clear-cart-btn").onclick = () => {
             if(cart.length === 0) return;
             if(confirm("Empty your cart?")) {
                 cart = [];
                 updateCount();
                 renderCart();
-                renderProducts(); // To reset buttons on grid
+                renderProducts();
             }
         };
 
