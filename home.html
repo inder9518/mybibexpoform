@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (Cart Layout Fixed)</title>
+    <title>Store (Clear Cart Added)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -45,86 +45,62 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
-        
-        /* Close Button (Sticky) */
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
 
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
         
-        /* 💡 YAHAN CART KI CSS BADLI HAI */
+        /* Cart Styles */
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
-        
-        .cart-item { 
-            display: flex; 
-            align-items: flex-start; /* Image ko upar chipka ke rakhega */
-            gap: 15px; 
-            margin-bottom: 20px; 
-            border-bottom: 1px solid #eee; 
-            padding-bottom: 15px; 
-        }
-        
-        .cart-item img { 
-            width: 80px; 
-            height: 80px; 
-            border-radius: 8px; 
-            object-fit: cover; 
-            flex-shrink: 0; /* Image ka size fix rahega */
-        }
-        
-        .cart-item-info { 
-            flex-grow: 1; 
-            /* Flex column taki name, price aur buttons ek ke niche ek aayein */
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .cart-item-info h4 { 
-            margin: 0 0 5px 0; 
-            font-size: 1rem; 
-            /* Agar naam lamba ho to toot kar agli line mein aaye */
-            white-space: normal; 
-            word-wrap: break-word;
-        }
-        
-        .cart-item-info p { 
-            margin: 0 0 10px 0; 
-            color: #0056b3; 
-            font-weight: bold;
-        }
-
-        /* Naye Quantity Controls ka Style */
-        .cart-qty-controls {
-            display: flex;
-            align-items: center;
-        }
-        
-        .cart-qty-controls button {
-            background-color: #f0f0f0; 
-            color: #333; 
-            border: 1px solid #ccc; 
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .cart-qty-controls span { 
-            margin: 0 15px; 
-            font-size: 1.1rem; 
-            font-weight: bold; 
-        }
-
+        .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-item img { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+        .cart-item-info { flex-grow: 1; display: flex; flex-direction: column; }
+        .cart-item-info h4 { margin: 0 0 5px 0; font-size: 1rem; white-space: normal; word-wrap: break-word; }
+        .cart-item-info p { margin: 0 0 10px 0; color: #0056b3; font-weight: bold; }
+        .cart-qty-controls { display: flex; align-items: center; }
+        .cart-qty-controls button { background-color: #f0f0f0; color: #333; border: 1px solid #ccc; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .cart-qty-controls span { margin: 0 15px; font-size: 1.1rem; font-weight: bold; }
         .cart-total { margin-top: 20px; text-align: right; font-size: 1.3rem; font-weight: bold; border-top: 2px solid #eee; padding-top: 10px; }
+
+        /* 💡 NEW: CART BUTTONS CONTAINER */
+        .cart-actions {
+            display: flex;
+            gap: 10px; /* Buttons ke beech gap */
+            margin-top: 20px;
+        }
+
+        /* WhatsApp Button */
+        #whatsapp-order-btn { 
+            flex: 2; /* Yeh zyada jagah lega */
+            background-color: #25D366; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+
+        /* Clear Cart Button */
+        #clear-cart-btn {
+            flex: 1; /* Yeh kam jagah lega */
+            background-color: #ff4d4d; /* Red Color */
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #clear-cart-btn:hover { background-color: #cc0000; }
+
+        /* Common */
         #toast-overlay { background: transparent; pointer-events: none; }
         .toast-popup { background-color: white; color: #333; padding: 15px 30px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.1rem; font-weight: bold; pointer-events: auto; }
         #user-form-modal form { display: flex; flex-direction: column; gap: 15px; }
         #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
-        #user-form-modal .submit-btn, #whatsapp-order-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
         /* --- MEDIA QUERIES --- */
         @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -180,7 +156,11 @@
             <h2>Your Cart</h2>
             <div id="cart-items-list"></div>
             <div class="cart-total" id="cart-total">Total: ₹0.00</div>
-            <button id="whatsapp-order-btn">Order via WhatsApp</button>
+            
+            <div class="cart-actions">
+                <button id="whatsapp-order-btn">Order via WhatsApp</button>
+                <button id="clear-cart-btn">Clear Cart</button>
+            </div>
         </div>
     </div>
 
@@ -291,7 +271,6 @@
             }
         }
 
-        // --- 💡 YAHAN JS BADLAAV KIYA HAI (Cart Structure) ---
         function renderCart() {
             const list = document.getElementById("cart-items-list");
             list.innerHTML = "";
@@ -308,8 +287,6 @@
                 if(p) {
                     const cost = p.price * c.qty;
                     total += cost;
-                    
-                    // Buttons ab INFO div ke andar hain
                     list.innerHTML += `
                         <div class="cart-item">
                             <img src="${p.imageSrc || ''}">
@@ -351,7 +328,24 @@
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("cart-close-btn").onclick = () => closeModal("cart-overlay");
         document.getElementById("product-info-close-btn").onclick = () => closeModal("product-info-overlay");
-        document.getElementById("whatsapp-order-btn").onclick = () => { if(cart.length === 0) return alert("Cart empty"); closeModal("cart-overlay"); openModal("user-form-overlay"); };
+        
+        document.getElementById("whatsapp-order-btn").onclick = () => { 
+            if(cart.length === 0) return alert("Cart empty"); 
+            closeModal("cart-overlay"); 
+            openModal("user-form-overlay"); 
+        };
+        
+        // 💡 CLEAR CART BUTTON LOGIC
+        document.getElementById("clear-cart-btn").onclick = () => {
+            if(cart.length === 0) return;
+            if(confirm("Empty your cart?")) {
+                cart = [];
+                updateCount();
+                renderCart();
+                renderProducts(); // To reset buttons on grid
+            }
+        };
+
         document.getElementById("form-close-btn").onclick = () => closeModal("user-form-overlay");
         document.querySelectorAll(".modal-overlay").forEach(o => { o.onclick = (e) => { if(e.target === o) closeModal(o.id); } });
 
