@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (Auto-Close Popups)</title>
+    <title>Store (Smart Sync)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -187,33 +187,51 @@
         let allProducts = [];
         let cart = [];
 
-        // --- 💡 1. SMART NAVIGATION LOGIC (Sabse Zaroori) ---
-        
-        // "pageshow" event tab chalta hai jab page load ho ya Back button se wapas aayein
+        // --- 💡 1. SMART CART LOGIC ---
+        // Logic: Cart sirf tab khaali hoga jab actual me 'Refresh' (F5/Reload) kiya ho.
+        // Agar normal page change (Home click) ya Back button dabaya hai to Cart rahega.
+
+        // 💡 Pageshow event: Yeh tab chalta hai jab page load ho ya back/forward se aaye
         window.addEventListener('pageshow', (event) => {
             
-            // Step A: Agar refresh kiya hai, to cart uda do
-            const navigationEntry = performance.getEntriesByType("navigation")[0];
-            if (navigationEntry && navigationEntry.type === "reload") {
-                sessionStorage.removeItem('myCart');
+            // 1. Check Navigation Type (Reliable way)
+            const perfEntries = performance.getEntriesByType("navigation");
+            let isReload = false;
+            
+            if (perfEntries.length > 0) {
+                if (perfEntries[0].type === 'reload') {
+                    isReload = true;
+                }
+            } else {
+                // Fallback for older browsers
+                if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+                    isReload = true;
+                }
+            }
+
+            // 2. Logic
+            if (isReload) {
+                // Agar Refresh hai -> Clear Cart
+                localStorage.removeItem('myCart');
                 cart = [];
             } else {
-                // Nahi to cart load karo
-                cart = JSON.parse(sessionStorage.getItem('myCart')) || [];
+                // Agar Navigation hai -> Load Cart
+                cart = JSON.parse(localStorage.getItem('myCart')) || [];
             }
             updateCount();
 
-            // Step B: Wapas aane par sab band karo (Clean Slate)
-            closeModalAll(); 
-            
-            // Step C: Agar URL mein #modal hai, to use hata do (History clean karo)
+            // 3. Clean Slate (Band karo sab kuch)
+            // Agar back button se aaye hain to modals band hone chahiye
+            document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
+            document.body.classList.remove("body-no-scroll");
+
+            // 4. URL Cleaning
             if (window.location.hash === "#modal") {
                 history.replaceState(null, null, window.location.pathname);
             }
         });
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Fetch Products
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
             fetch(url)
                 .then(res => res.text())
@@ -238,7 +256,7 @@
         });
 
         function saveCart() {
-            sessionStorage.setItem('myCart', JSON.stringify(cart));
+            localStorage.setItem('myCart', JSON.stringify(cart));
             updateCount();
         }
 
@@ -340,33 +358,38 @@
             badge.style.display = count > 0 ? "flex" : "none";
         }
 
-        // --- 💡 BACK BUTTON & POP-UP CONTROL ---
-        
+        // --- 💡 BACK BUTTON LOGIC ---
         function openModal(id) {
             const modal = document.getElementById(id);
             modal.classList.add("active");
             document.body.classList.add("body-no-scroll");
-            // Add fake history so Back button works
+            // History mein entry daalo
             history.pushState({ modalOpen: id }, null, "#modal");
         }
 
-        function closeModalAll() {
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.classList.contains("active")) {
+                modal.classList.remove("active");
+                if (!document.querySelector(".modal-overlay.active")) {
+                    document.body.classList.remove("body-no-scroll");
+                }
+            }
+        }
+
+        // Jab Back button dabaya jaye
+        window.addEventListener("popstate", () => {
+            // Saare modals band karo
             document.querySelectorAll(".modal-overlay.active").forEach(modal => {
                 modal.classList.remove("active");
             });
             document.body.classList.remove("body-no-scroll");
-        }
-
-        // Listen for Browser Back Button (Popstate)
-        window.addEventListener("popstate", () => {
-            closeModalAll(); // Back dabane par sab band karo
         });
 
-        // --- Event Listeners (Buttons) ---
+        // Listeners - Close buttons ab history.back() use karenge
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
 
-        // Close buttons (Manually trigger back to keep history clean)
         document.getElementById("cart-close-btn").onclick = () => history.back();
         document.getElementById("categories-close-btn").onclick = () => history.back();
         document.getElementById("product-info-close-btn").onclick = () => history.back();
@@ -378,7 +401,7 @@
 
         document.getElementById("whatsapp-order-btn").onclick = () => { 
             if(cart.length === 0) return alert("Cart empty"); 
-            history.back(); // Close cart
+            history.back(); 
             setTimeout(() => openModal("user-form-overlay"), 100); 
         };
 
@@ -409,7 +432,7 @@
             cart = []; 
             saveCart(); 
             renderProducts(); 
-            history.back(); // Close form
+            history.back();
             document.getElementById("whatsapp-form").reset();
         };
 
