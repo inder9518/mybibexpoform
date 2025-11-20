@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (Back Button Fixed)</title>
+    <title>Store (Smart Cart & Navigation)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -37,15 +37,8 @@
         /* --- FOOTER --- */
         .footer-nav { background-color: #333; padding: 10px; border-radius: 30px; display: flex; gap: 10px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s ease-out; }
         .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
-        
-        .footer-nav .nav-button { 
-            background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; cursor: pointer; position: relative; overflow: visible; 
-        }
-
-        /* Badge Style */
-        .cart-count-badge { 
-            position: absolute; top: -5px; right: -5px; background-color: #ff4d4d; color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 2px 5px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; z-index: 10; display: none; 
-        }
+        .footer-nav .nav-button { background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; cursor: pointer; position: relative; overflow: visible; }
+        .cart-count-badge { position: absolute; top: -5px; right: -5px; background-color: #ff4d4d; color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 2px 5px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; z-index: 10; display: none; }
         .cart-count-badge.active { display: flex; }
 
         /* --- MODALS --- */
@@ -54,12 +47,12 @@
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
 
-        /* CATEGORY LIST STYLES */
+        /* CATEGORY LIST */
         .category-list { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
         .category-item { background-color: #f8f9fa; color: #333; padding: 15px; text-decoration: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; text-align: center; border: 2px solid #eee; transition: all 0.2s ease; display: block; }
         .category-item:hover { background-color: #007bff; color: white; border-color: #0056b3; transform: scale(1.02); }
 
-        /* Other Styles */
+        /* CART */
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -76,14 +69,13 @@
         #clear-cart-btn { flex: 1; background-color: #ff4d4d; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         #clear-cart-btn:hover { background-color: #cc0000; }
 
-        /* Common */
+        /* COMMON */
         #toast-overlay { background: transparent; pointer-events: none; }
         .toast-popup { background-color: white; color: #333; padding: 15px 30px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.1rem; font-weight: bold; pointer-events: auto; }
         #user-form-modal form { display: flex; flex-direction: column; gap: 15px; }
         #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
         #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
-        /* Media Queries */
         @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 600px) {
             body { padding-top: 85px; }
@@ -193,11 +185,23 @@
         const WHATSAPP_NUMBER = "919518843849"; 
 
         let allProducts = [];
-        // Load saved cart
-        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
+        let cart = [];
 
+        // 💡 1. SMART INITIALIZATION (Refresh Check)
         document.addEventListener("DOMContentLoaded", () => {
-            updateCount(); 
+            // Check navigation type: Agar Refresh (Reload) hai, to cart clear karo
+            const navigationEntry = performance.getEntriesByType("navigation")[0];
+            if (navigationEntry && navigationEntry.type === "reload") {
+                sessionStorage.removeItem('myCart'); // Refresh par delete
+            }
+
+            // Ensure page starts fresh (No modals, No scroll lock)
+            document.body.classList.remove("body-no-scroll");
+            document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
+
+            // Load Cart from Session Storage (Saves on Navigate, Clears on Tab Close)
+            cart = JSON.parse(sessionStorage.getItem('myCart')) || [];
+            updateCount();
             
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
             fetch(url)
@@ -222,8 +226,9 @@
                 });
         });
 
+        // 💡 2. SAVE TO SESSION STORAGE (Navigating pages keeps cart, Closing/Refresh clears)
         function saveCart() {
-            localStorage.setItem('myCart', JSON.stringify(cart));
+            sessionStorage.setItem('myCart', JSON.stringify(cart));
             updateCount();
         }
 
@@ -270,8 +275,6 @@
                 btn.disabled = true;
                 btn.innerText = "Added";
                 saveCart();
-                
-                // Show toast
                 const toast = document.getElementById("toast-overlay");
                 toast.classList.add("active");
                 setTimeout(() => toast.classList.remove("active"), 1000);
@@ -324,21 +327,21 @@
             const count = cart.reduce((a, b) => a + b.qty, 0);
             const badge = document.getElementById("cart-count-badge");
             badge.innerText = count;
-            badge.style.display = count > 0 ? "flex" : "none";
+            if (count > 0) {
+                badge.style.display = "flex"; 
+            } else {
+                badge.style.display = "none";
+            }
         }
 
-        // --- 💡 BACK BUTTON LOGIC START ---
-        
-        // Open Modal: Add history state
+        // --- 💡 BACK BUTTON & POP-UP LOGIC ---
         function openModal(id) {
             const modal = document.getElementById(id);
             modal.classList.add("active");
             document.body.classList.add("body-no-scroll");
-            // Push state to history so back button can catch it
             history.pushState({ modalOpen: id }, null, "#modal");
         }
 
-        // Close Logic (Called by Back Button mainly)
         function closeModalAll() {
             document.querySelectorAll(".modal-overlay.active").forEach(modal => {
                 modal.classList.remove("active");
@@ -350,29 +353,24 @@
         window.addEventListener("popstate", () => {
             closeModalAll();
         });
-        // --- 💡 BACK BUTTON LOGIC END ---
-
 
         // --- Event Listeners (Using history.back for closing) ---
-        
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
 
-        // Close buttons should trigger Back logic
         document.getElementById("cart-close-btn").onclick = () => history.back();
         document.getElementById("categories-close-btn").onclick = () => history.back();
         document.getElementById("product-info-close-btn").onclick = () => history.back();
         document.getElementById("form-close-btn").onclick = () => history.back();
 
-        // Background click closes modal (also triggers back)
         document.querySelectorAll(".modal-overlay").forEach(o => { 
             o.onclick = (e) => { if(e.target === o) history.back(); } 
         });
 
         document.getElementById("whatsapp-order-btn").onclick = () => { 
             if(cart.length === 0) return alert("Cart empty"); 
-            history.back(); // Close cart
-            setTimeout(() => openModal("user-form-overlay"), 100); // Open form
+            history.back(); 
+            setTimeout(() => openModal("user-form-overlay"), 100); 
         };
 
         document.getElementById("clear-cart-btn").onclick = () => {
@@ -398,11 +396,8 @@
             });
             msg += `\n\n*Total: ₹${total}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-            
-            cart = []; 
-            saveCart(); 
-            renderProducts();
-            history.back(); // Close form
+            cart = []; saveCart(); renderProducts(); 
+            history.back(); 
             document.getElementById("whatsapp-form").reset();
         };
 
