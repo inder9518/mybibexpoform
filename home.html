@@ -24,14 +24,26 @@
         .hero-banner { width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
 
-        /* --- NEW CATEGORY SECTION STYLES --- */
+        /* --- 🔥 SLIDER CATEGORY SECTION (UPDATED) --- */
         .category-section { margin-bottom: 30px; }
+        
+        /* Container for slider */
         .category-grid { 
-            display: grid; 
-            grid-template-columns: repeat(5, 1fr); /* Desktop: 5 columns */
-            gap: 15px; 
-            padding: 10px 0;
+            display: flex;             /* Make it a row */
+            gap: 15px;                 /* Space between items */
+            overflow-x: auto;          /* Enable horizontal scrolling */
+            padding: 10px 5px;         /* Padding for shadows */
+            scroll-behavior: smooth;   /* Smooth scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scroll for iOS */
+            scrollbar-width: none;     /* Hide scrollbar for Firefox */
         }
+        
+        /* Hide scrollbar for Chrome/Safari/Opera */
+        .category-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Individual Cards */
         .category-card {
             background-color: white;
             border-radius: 15px;
@@ -40,22 +52,27 @@
             text-decoration: none;
             color: #333;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
             border: 2px solid transparent;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            
+            /* Critical for Slider */
+            min-width: 80px;   /* Minimum width to ensure they don't shrink too much */
+            width: 100px;      /* Fixed comfortable width */
+            flex-shrink: 0;    /* Prevent items from shrinking */
         }
+
         .category-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             border-color: #0056b3;
             color: #0056b3;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
         }
-        .category-card i { font-size: 2rem; color: #0056b3; margin-bottom: 5px; }
-        .category-card span { font-weight: bold; font-size: 0.9rem; }
+        .category-card i { font-size: 1.8rem; color: #0056b3; margin-bottom: 5px; }
+        .category-card span { font-weight: bold; font-size: 0.85rem; white-space: nowrap; }
         
         /* --- PRODUCT GRID --- */
         .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 300px; }
@@ -114,9 +131,9 @@
             .header-logo { max-width: 100px; max-height: 40px; }
             .social-media-icons a { font-size: 1.3rem; }
             
-            /* Category Grid on Mobile - 3 Columns looks good */
-            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .category-card { padding: 10px; }
+            /* Category tweaks for mobile if needed */
+            .category-grid { gap: 10px; }
+            .category-card { width: 85px; padding: 10px; }
             .category-card i { font-size: 1.5rem; }
             .category-card span { font-size: 0.75rem; }
 
@@ -163,11 +180,15 @@
                 </a>
                 <a href="accessories.html" class="category-card">
                     <i class="fas fa-watch"></i>
-                    <span>Access..</span>
+                    <span>Accessories</span>
                 </a>
                 <a href="home_decor.html" class="category-card">
                     <i class="fas fa-home"></i>
                     <span>Decor</span>
+                </a>
+                <a href="beauty.html" class="category-card">
+                    <i class="fas fa-spa"></i>
+                    <span>Beauty</span>
                 </a>
             </div>
         </section>
@@ -236,31 +257,22 @@
         let allProducts = [];
         let cart = [];
 
-        // 💡 1. SMART PAGE LOAD LOGIC
         document.addEventListener("DOMContentLoaded", () => {
-            
-            // Check 1: Reset URL
             if (window.location.hash === "#modal") {
                 history.replaceState(null, null, window.location.pathname);
             }
-
-            // Check 2: Close all modals
             document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
             document.body.classList.remove("body-no-scroll");
 
-            // Check 3: Cart Handling
             const navEntry = performance.getEntriesByType("navigation")[0];
-            
             if (navEntry && navEntry.type === "reload") {
                 localStorage.removeItem('myCart'); 
                 cart = [];
             } else {
                 cart = JSON.parse(localStorage.getItem('myCart')) || [];
             }
-            
             updateCount(); 
             
-            // Fetch Products
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
             fetch(url)
                 .then(res => res.text())
@@ -387,7 +399,6 @@
             badge.style.display = count > 0 ? "flex" : "none";
         }
 
-        // --- 💡 BACK BUTTON & POP-UP LOGIC ---
         function openModal(id) {
             const modal = document.getElementById(id);
             modal.classList.add("active");
@@ -406,12 +417,8 @@
             closeModalAll();
         });
 
-        // --- Event Listeners ---
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
-        // Categories listener removed
-
         document.getElementById("cart-close-btn").onclick = () => history.back();
-        // Categories close btn removed
         document.getElementById("product-info-close-btn").onclick = () => history.back();
         document.getElementById("form-close-btn").onclick = () => history.back();
 
