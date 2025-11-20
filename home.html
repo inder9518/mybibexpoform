@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TECHDROIDE</title>
+    <title>Store (With Categories)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -46,41 +46,14 @@
             text-decoration: none; 
             font-weight: bold; 
             cursor: pointer; 
-            
-            /* 💡 ZAROORI: Relative position taaki badge iske hisaab se set ho */
             position: relative; 
-            overflow: visible; /* Taaki badge button ke bahar nikle to kate nahi */
+            overflow: visible; 
         }
 
-        /* 💡 YAHAN FIX KIYA HAI: BADGE STYLE */
+        /* Badge Style */
         .cart-count-badge { 
-            position: absolute; /* Button ke upar tairta hua */
-            top: -5px;          /* Thoda upar */
-            right: -5px;        /* Thoda right */
-            
-            background-color: #ff4d4d; 
-            color: white; 
-            border-radius: 10px; /* Pill shape */
-            
-            /* Size fix */
-            min-width: 18px; 
-            height: 18px;
-            padding: 2px 5px; /* Padding taaki double digit fit aaye */
-             
-            /* Text Centering */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            
-            font-size: 0.75rem; 
-            font-weight: bold; 
-            z-index: 10;
-            
-            /* Default hide (JS se active hoga) */
-            display: none; 
+            position: absolute; top: -5px; right: -5px; background-color: #ff4d4d; color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 2px 5px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; z-index: 10; display: none; 
         }
-        
-        /* Jab badge active ho, to Flex ban jaaye taaki center rahe */
         .cart-count-badge.active { display: flex; }
 
         /* --- MODALS --- */
@@ -89,6 +62,34 @@
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
 
+        /* 💡 💡 NEW: CATEGORY LIST STYLES 💡 💡 */
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .category-item {
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 15px;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #eee;
+            transition: all 0.2s ease;
+            display: block;
+        }
+        .category-item:hover {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+            transform: scale(1.02);
+        }
+
+        /* Other Styles */
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -100,8 +101,6 @@
         .cart-qty-controls button { background-color: #f0f0f0; color: #333; border: 1px solid #ccc; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .cart-qty-controls span { margin: 0 15px; font-size: 1.1rem; font-weight: bold; }
         .cart-total { margin-top: 20px; text-align: right; font-size: 1.3rem; font-weight: bold; border-top: 2px solid #eee; padding-top: 10px; }
-
-        /* Cart Actions */
         .cart-actions { display: flex; gap: 10px; margin-top: 20px; }
         #whatsapp-order-btn { flex: 2; background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
         #clear-cart-btn { flex: 1; background-color: #ff4d4d; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
@@ -157,11 +156,28 @@
 
     <footer class="footer-nav" id="footer-nav">
         <a class="nav-button" onclick="window.scrollTo(0,0)">Home</a>
+        
+        <a class="nav-button" id="categories-open-btn">Categories</a>
+        
         <a class="nav-button" id="cart-open-btn">
             Cart 
             <span class="cart-count-badge" id="cart-count-badge">0</span>
         </a>
     </footer>
+
+    <div class="modal-overlay" id="categories-overlay">
+        <div class="modal-box" id="categories-modal">
+            <button class="modal-close-btn" id="categories-close-btn">&times;</button>
+            <h2>Shop by Category</h2>
+            <div class="category-list">
+                <a href="electronics.html" class="category-item">📱 Electronics</a>
+                <a href="fashion.html" class="category-item">👕 Fashion</a>
+                <a href="shoes.html" class="category-item">👟 Shoes & Sneakers</a>
+                <a href="accessories.html" class="category-item">⌚ Accessories</a>
+                <a href="home_decor.html" class="category-item">🏠 Home Decor</a>
+            </div>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="cart-overlay">
         <div class="modal-box" id="cart-modal">
@@ -329,7 +345,6 @@
             const count = cart.reduce((a, b) => a + b.qty, 0);
             const badge = document.getElementById("cart-count-badge");
             badge.innerText = count;
-            // CSS mein "display: none" hai, JS mein "display: flex" karna hai taaki center align rahe
             if (count > 0) {
                 badge.style.display = "flex"; 
             } else {
@@ -342,24 +357,14 @@
 
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("cart-close-btn").onclick = () => closeModal("cart-overlay");
-        document.getElementById("product-info-close-btn").onclick = () => closeModal("product-info-overlay");
         
-        document.getElementById("whatsapp-order-btn").onclick = () => { 
-            if(cart.length === 0) return alert("Cart empty"); 
-            closeModal("cart-overlay"); 
-            openModal("user-form-overlay"); 
-        };
+        // 💡 CATEGORIES EVENT LISTENERS
+        document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
+        document.getElementById("categories-close-btn").onclick = () => closeModal("categories-overlay");
 
-        document.getElementById("clear-cart-btn").onclick = () => {
-            if(cart.length === 0) return;
-            if(confirm("Empty your cart?")) {
-                cart = [];
-                updateCount();
-                renderCart();
-                renderProducts();
-            }
-        };
-
+        document.getElementById("product-info-close-btn").onclick = () => closeModal("product-info-overlay");
+        document.getElementById("whatsapp-order-btn").onclick = () => { if(cart.length === 0) return alert("Cart empty"); closeModal("cart-overlay"); openModal("user-form-overlay"); };
+        document.getElementById("clear-cart-btn").onclick = () => { if(cart.length === 0) return; if(confirm("Empty your cart?")) { cart = []; updateCount(); renderCart(); renderProducts(); } };
         document.getElementById("form-close-btn").onclick = () => closeModal("user-form-overlay");
         document.querySelectorAll(".modal-overlay").forEach(o => { o.onclick = (e) => { if(e.target === o) closeModal(o.id); } });
 
