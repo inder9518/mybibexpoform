@@ -3,28 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (With Categories)</title>
+    <title>Store (Persistent Cart & Back logic)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
-        /* --- 1. GENERAL --- */
+        /* --- CSS SAME AS BEFORE --- */
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; padding-top: 110px; transition: overflow 0.3s ease; }
         body.body-no-scroll { overflow: hidden; }
 
-        /* --- HEADER --- */
+        /* Header */
         .curved-header { background-color: #0056b3; color: white; padding: 20px 40px; border-radius: 40px; position: fixed; top: 20px; left: 20px; right: 20px; z-index: 900; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .header-logo { max-width: 150px; height: auto; max-height: 60px; object-fit: contain; }
         .social-media-icons { display: flex; gap: 20px; }
         .social-media-icons a { color: white; text-decoration: none; font-size: 1.6rem; transition: transform 0.2s ease; }
         .social-media-icons a:hover { transform: scale(1.15); }
 
-        /* --- CONTENT --- */
+        /* Content */
         .content { padding: 15px; max-width: 1200px; margin: 0 auto; }
         .content h2 { text-align: center; text-transform: uppercase; font-weight: bold; text-decoration: underline; margin-top: 20px; margin-bottom: 25px; color: #333; font-size: 2rem; }
         .hero-banner { width: 100%; margin-bottom: 30px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
         
-        /* --- PRODUCT GRID --- */
+        /* Product Grid */
         .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 300px; }
         .product-card { background-color: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s ease; display: flex; flex-direction: column; }
         .product-card:hover { transform: translateY(-5px); }
@@ -34,7 +34,7 @@
         .product-price { font-size: 1.2rem; font-weight: bold; color: #0056b3; margin: 0 0 10px 0; }
         .add-to-cart-btn { background-color: #28a745; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.9rem; font-weight: bold; }
 
-        /* --- FOOTER --- */
+        /* Footer */
         .footer-nav { background-color: #333; padding: 10px; border-radius: 30px; display: flex; gap: 10px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s ease-out; }
         .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
         
@@ -50,46 +50,24 @@
             overflow: visible; 
         }
 
-        /* Badge Style */
+        /* Badge */
         .cart-count-badge { 
             position: absolute; top: -5px; right: -5px; background-color: #ff4d4d; color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 2px 5px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; z-index: 10; display: none; 
         }
         .cart-count-badge.active { display: flex; }
 
-        /* --- MODALS --- */
+        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
 
-        /* CATEGORY LIST STYLES */
-        .category-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        .category-item {
-            background-color: #f8f9fa;
-            color: #333;
-            padding: 15px;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-align: center;
-            border: 2px solid #eee;
-            transition: all 0.2s ease;
-            display: block;
-        }
-        .category-item:hover {
-            background-color: #007bff;
-            color: white;
-            border-color: #0056b3;
-            transform: scale(1.02);
-        }
+        /* Category List */
+        .category-list { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .category-item { background-color: #f8f9fa; color: #333; padding: 15px; text-decoration: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; text-align: center; border: 2px solid #eee; transition: all 0.2s ease; display: block; }
+        .category-item:hover { background-color: #007bff; color: white; border-color: #0056b3; transform: scale(1.02); }
 
-        /* Other Styles */
+        /* Cart Specifics */
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
@@ -155,10 +133,8 @@
     </main>
 
     <footer class="footer-nav" id="footer-nav">
-        <a href="home.html" class="nav-button">Home</a>
-        
+        <a href="index.html" class="nav-button">Home</a>
         <a class="nav-button" id="categories-open-btn">Categories</a>
-        
         <a class="nav-button" id="cart-open-btn">
             Cart 
             <span class="cart-count-badge" id="cart-count-badge">0</span>
@@ -225,9 +201,14 @@
         const WHATSAPP_NUMBER = "919518843849"; 
 
         let allProducts = [];
-        let cart = [];
+        
+        // 💡 1. LOAD CART FROM LOCAL STORAGE
+        // Agar purana data hai to load karo, nahi to khali array
+        let cart = JSON.parse(localStorage.getItem('myCart')) || [];
 
         document.addEventListener("DOMContentLoaded", () => {
+            updateCount(); // Page load hone par badge turant update karo
+            
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
             fetch(url)
                 .then(res => res.text())
@@ -250,6 +231,12 @@
                     document.getElementById("product-grid").innerHTML = "<h3>Failed to load. Check Sheet permissions.</h3>";
                 });
         });
+
+        // 💡 2. HELPER FUNCTION TO SAVE CART
+        function saveCart() {
+            localStorage.setItem('myCart', JSON.stringify(cart));
+            updateCount();
+        }
 
         function renderProducts() {
             const grid = document.getElementById("product-grid");
@@ -293,7 +280,9 @@
                 cart.push({id: id, qty: 1});
                 btn.disabled = true;
                 btn.innerText = "Added";
-                updateCount();
+                
+                saveCart(); // 💡 Save changes
+                
                 openModal("toast-overlay");
                 setTimeout(() => closeModal("toast-overlay"), 1000);
             }
@@ -336,8 +325,9 @@
             if(item) {
                 item.qty += change;
                 if(item.qty <= 0) { cart = cart.filter(c => c.id != id); renderProducts(); }
+                
+                saveCart(); // 💡 Save changes
                 renderCart();
-                updateCount();
             }
         }
 
@@ -352,22 +342,76 @@
             }
         }
 
-        function openModal(id) { document.getElementById(id).classList.add("active"); document.body.classList.add("body-no-scroll"); }
-        function closeModal(id) { document.getElementById(id).classList.remove("active"); if(!document.querySelector(".modal-overlay.active")) document.body.classList.remove("body-no-scroll"); }
-
-        // Event Listeners
-        document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
-        document.getElementById("cart-close-btn").onclick = () => closeModal("cart-overlay");
+        // --- 💡 3. BACK BUTTON & POP-UP LOGIC ---
         
-        // Categories listeners
-        document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
-        document.getElementById("categories-close-btn").onclick = () => closeModal("categories-overlay");
+        // Jab modal khule, to browser history mein state daalo
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.add("active");
+            document.body.classList.add("body-no-scroll");
+            
+            // History mein fake navigation add karo
+            history.pushState({ modalId: id }, null, ""); 
+        }
 
-        document.getElementById("product-info-close-btn").onclick = () => closeModal("product-info-overlay");
-        document.getElementById("whatsapp-order-btn").onclick = () => { if(cart.length === 0) return alert("Cart empty"); closeModal("cart-overlay"); openModal("user-form-overlay"); };
-        document.getElementById("clear-cart-btn").onclick = () => { if(cart.length === 0) return; if(confirm("Empty your cart?")) { cart = []; updateCount(); renderCart(); renderProducts(); } };
-        document.getElementById("form-close-btn").onclick = () => closeModal("user-form-overlay");
-        document.querySelectorAll(".modal-overlay").forEach(o => { o.onclick = (e) => { if(e.target === o) closeModal(o.id); } });
+        // Modal close logic
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if(modal.classList.contains("active")) {
+                modal.classList.remove("active");
+                
+                // Scroll tabhi on karo jab aur koi modal na ho
+                if(!document.querySelector(".modal-overlay.active")) {
+                    document.body.classList.remove("body-no-scroll");
+                }
+            }
+        }
+        
+        // Jab user Browser ka Back button dabaye
+        window.addEventListener("popstate", () => {
+            // Saare active modals ko dhoondo aur band karo
+            const activeModals = document.querySelectorAll(".modal-overlay.active");
+            activeModals.forEach(modal => {
+                modal.classList.remove("active");
+            });
+            document.body.classList.remove("body-no-scroll");
+        });
+
+        // --- EVENT LISTENERS (Buttons ab history.back() use karenge close ke liye) ---
+
+        document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
+        
+        // Close button dabane par history back karo (jo ki modal band karega)
+        document.getElementById("cart-close-btn").onclick = () => history.back();
+        
+        document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
+        document.getElementById("categories-close-btn").onclick = () => history.back();
+
+        document.getElementById("product-info-close-btn").onclick = () => history.back();
+        
+        document.getElementById("whatsapp-order-btn").onclick = () => { 
+            if(cart.length === 0) return alert("Cart empty"); 
+            // Cart band karo (back) aur fir Form kholo
+            history.back(); 
+            setTimeout(() => openModal("user-form-overlay"), 100); 
+        };
+
+        document.getElementById("clear-cart-btn").onclick = () => {
+            if(cart.length === 0) return;
+            if(confirm("Empty your cart?")) {
+                cart = [];
+                saveCart(); // 💡 Save changes
+                renderCart();
+                renderProducts();
+            }
+        };
+
+        document.getElementById("form-close-btn").onclick = () => history.back();
+        
+        // Background click par bhi history back
+        document.querySelectorAll(".modal-overlay").forEach(o => { 
+            o.onclick = (e) => { if(e.target === o) history.back(); } 
+        });
 
         document.getElementById("whatsapp-form").onsubmit = (e) => {
             e.preventDefault();
@@ -382,7 +426,13 @@
             });
             msg += `\n\n*Total: ₹${total}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-            cart = []; updateCount(); renderProducts(); closeModal("user-form-overlay"); document.getElementById("whatsapp-form").reset();
+            
+            cart = []; 
+            saveCart(); // 💡 Save changes
+            renderProducts(); 
+            
+            history.back(); // Form band karo
+            document.getElementById("whatsapp-form").reset();
         };
 
         let lastScroll = window.scrollY;
