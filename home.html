@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store (Smart Navigation)</title>
+    <title>TECHDROIDE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
@@ -21,8 +21,41 @@
         /* --- CONTENT --- */
         .content { padding: 15px; max-width: 1200px; margin: 0 auto; }
         .content h2 { text-align: center; text-transform: uppercase; font-weight: bold; text-decoration: underline; margin-top: 20px; margin-bottom: 25px; color: #333; font-size: 2rem; }
-        .hero-banner { width: 100%; margin-bottom: 30px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .hero-banner { width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
+
+        /* --- NEW CATEGORY SECTION STYLES --- */
+        .category-section { margin-bottom: 30px; }
+        .category-grid { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); /* Desktop: 5 columns */
+            gap: 15px; 
+            padding: 10px 0;
+        }
+        .category-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            border-color: #0056b3;
+            color: #0056b3;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+        }
+        .category-card i { font-size: 2rem; color: #0056b3; margin-bottom: 5px; }
+        .category-card span { font-weight: bold; font-size: 0.9rem; }
         
         /* --- PRODUCT GRID --- */
         .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 300px; }
@@ -46,11 +79,6 @@
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { position: sticky; top: 0; float: right; background-color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 2rem; cursor: pointer; color: #888; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; margin-top: -20px; margin-right: -20px; margin-bottom: 10px; }
-
-        /* CATEGORY LIST */
-        .category-list { display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
-        .category-item { background-color: #f8f9fa; color: #333; padding: 15px; text-decoration: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; text-align: center; border: 2px solid #eee; transition: all 0.2s ease; display: block; }
-        .category-item:hover { background-color: #007bff; color: white; border-color: #0056b3; transform: scale(1.02); }
 
         /* CART */
         #product-info-modal .product-image { height: 250px; border-radius: 10px; margin-bottom: 15px; }
@@ -76,12 +104,22 @@
         #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
         #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
-        @media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { 
+            .product-grid { grid-template-columns: repeat(3, 1fr); } 
+        }
+        
         @media (max-width: 600px) {
             body { padding-top: 85px; }
             .curved-header { padding: 15px 20px; border-radius: 25px; top: 10px; left: 10px; right: 10px; }
             .header-logo { max-width: 100px; max-height: 40px; }
             .social-media-icons a { font-size: 1.3rem; }
+            
+            /* Category Grid on Mobile - 3 Columns looks good */
+            .category-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .category-card { padding: 10px; }
+            .category-card i { font-size: 1.5rem; }
+            .category-card span { font-size: 0.75rem; }
+
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .product-image { height: 150px; }
             .product-info { padding: 10px; }
@@ -107,6 +145,32 @@
         <section class="hero-banner">
             <img src="BANNER.png" alt="Banner">
         </section>
+
+        <section class="category-section">
+            <h3 style="text-align:center; margin-bottom:15px; color:#555;">Top Categories</h3>
+            <div class="category-grid">
+                <a href="electronics.html" class="category-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <span>Electronics</span>
+                </a>
+                <a href="fashion.html" class="category-card">
+                    <i class="fas fa-tshirt"></i>
+                    <span>Fashion</span>
+                </a>
+                <a href="shoes.html" class="category-card">
+                    <i class="fas fa-shoe-prints"></i>
+                    <span>Shoes</span>
+                </a>
+                <a href="accessories.html" class="category-card">
+                    <i class="fas fa-watch"></i>
+                    <span>Access..</span>
+                </a>
+                <a href="home_decor.html" class="category-card">
+                    <i class="fas fa-home"></i>
+                    <span>Decor</span>
+                </a>
+            </div>
+        </section>
         <h2>Our Products</h2>
         <div class="product-grid" id="product-grid">
             <div style="text-align:center; grid-column: 1/-1; padding: 50px;">
@@ -118,26 +182,11 @@
 
     <footer class="footer-nav" id="footer-nav">
         <a href="home.html" class="nav-button">Home</a>
-        <a class="nav-button" id="categories-open-btn">Categories</a>
         <a class="nav-button" id="cart-open-btn">
             Cart 
             <span class="cart-count-badge" id="cart-count-badge">0</span>
         </a>
     </footer>
-
-    <div class="modal-overlay" id="categories-overlay">
-        <div class="modal-box" id="categories-modal">
-            <button class="modal-close-btn" id="categories-close-btn">&times;</button>
-            <h2>Shop by Category</h2>
-            <div class="category-list">
-                <a href="electronics.html" class="category-item">📱 Electronics</a>
-                <a href="fashion.html" class="category-item">👕 Fashion</a>
-                <a href="shoes.html" class="category-item">👟 Shoes & Sneakers</a>
-                <a href="accessories.html" class="category-item">⌚ Accessories</a>
-                <a href="home_decor.html" class="category-item">🏠 Home Decor</a>
-            </div>
-        </div>
-    </div>
 
     <div class="modal-overlay" id="cart-overlay">
         <div class="modal-box" id="cart-modal">
@@ -190,28 +239,26 @@
         // 💡 1. SMART PAGE LOAD LOGIC
         document.addEventListener("DOMContentLoaded", () => {
             
-            // Check 1: Reset URL (Agar back button se aaye hain aur URL mein #modal hai to use saaf karo)
+            // Check 1: Reset URL
             if (window.location.hash === "#modal") {
                 history.replaceState(null, null, window.location.pathname);
             }
 
-            // Check 2: Close all modals forcefully (Clean Slate)
+            // Check 2: Close all modals
             document.querySelectorAll(".modal-overlay.active").forEach(m => m.classList.remove("active"));
             document.body.classList.remove("body-no-scroll");
 
-            // Check 3: Cart Handling (Clear on Refresh, Keep on Navigation)
+            // Check 3: Cart Handling
             const navEntry = performance.getEntriesByType("navigation")[0];
             
             if (navEntry && navEntry.type === "reload") {
-                // Agar user ne Refresh dabaya hai -> Cart Clear karo
                 localStorage.removeItem('myCart'); 
                 cart = [];
             } else {
-                // Agar normal navigation hai (Back/Home click) -> Cart Load karo
                 cart = JSON.parse(localStorage.getItem('myCart')) || [];
             }
             
-            updateCount(); // Update badge
+            updateCount(); 
             
             // Fetch Products
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
@@ -345,7 +392,6 @@
             const modal = document.getElementById(id);
             modal.classList.add("active");
             document.body.classList.add("body-no-scroll");
-            // Add state to history
             history.pushState({ modalOpen: id }, null, "#modal");
         }
 
@@ -356,18 +402,16 @@
             document.body.classList.remove("body-no-scroll");
         }
 
-        // Listen for Back Button
         window.addEventListener("popstate", () => {
             closeModalAll();
         });
 
         // --- Event Listeners ---
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
-        document.getElementById("categories-open-btn").onclick = () => openModal("categories-overlay");
+        // Categories listener removed
 
-        // Close buttons use history.back() to simulate back button press
         document.getElementById("cart-close-btn").onclick = () => history.back();
-        document.getElementById("categories-close-btn").onclick = () => history.back();
+        // Categories close btn removed
         document.getElementById("product-info-close-btn").onclick = () => history.back();
         document.getElementById("form-close-btn").onclick = () => history.back();
 
@@ -377,7 +421,7 @@
 
         document.getElementById("whatsapp-order-btn").onclick = () => { 
             if(cart.length === 0) return alert("Cart empty"); 
-            history.back(); // Close cart first
+            history.back(); 
             setTimeout(() => openModal("user-form-overlay"), 100); 
         };
 
