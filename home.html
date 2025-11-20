@@ -14,7 +14,6 @@
             margin: 0; 
             font-family: Arial, sans-serif; 
             background-color: #f4f4f4; 
-            /* Adjusted top padding for header */
             padding-top: 115px; 
             padding-bottom: 0; 
             transition: overflow 0.3s ease; 
@@ -112,14 +111,13 @@
         .load-more-btn:hover { background-color: #0056b3; color: white; transform: scale(1.05); }
         .load-more-btn.hidden { display: none; }
 
-        /* --- 🔥 FULL WIDTH FOOTER (FIXED) --- */
+        /* --- FULL WIDTH FOOTER --- */
         .main-footer { 
             background-color: #0056b3; 
             color: white; 
-            padding: 20px 0; /* Vertical Padding Only */
+            padding: 20px 0; 
             text-align: center; 
-            margin-top: 0; 
-            width: 100%; /* Full Width */
+            width: 100%; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -134,9 +132,37 @@
         .footer-copyright { color: rgba(255, 255, 255, 0.8); font-size: 0.8rem; margin: 0; }
 
         /* --- FLOATING NAV --- */
-        .footer-nav { background-color: #333; padding: 10px; border-radius: 30px; display: flex; gap: 10px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s ease-out; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .footer-nav { 
+            background-color: #333; 
+            padding: 10px 15px; 
+            border-radius: 30px; 
+            display: flex; 
+            gap: 8px; 
+            position: fixed; 
+            bottom: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 999; 
+            transition: transform 0.4s ease-out; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3); 
+            white-space: nowrap;
+        }
         .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
-        .footer-nav .nav-button { background-color: #007bff; color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-weight: bold; cursor: pointer; position: relative; overflow: visible; }
+        .footer-nav .nav-button { 
+            background-color: #007bff; 
+            color: white; 
+            padding: 10px 15px; 
+            border-radius: 20px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            position: relative; 
+            overflow: visible; 
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
         .cart-count-badge { position: absolute; top: -5px; right: -5px; background-color: #ff4d4d; color: white; border-radius: 10px; min-width: 18px; height: 18px; padding: 2px 5px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold; z-index: 10; display: none; }
         .cart-count-badge.active { display: flex; }
 
@@ -166,9 +192,9 @@
         
         #toast-overlay { background: transparent; pointer-events: none; }
         .toast-popup { background-color: white; color: #333; padding: 15px 30px; border-radius: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 1.1rem; font-weight: bold; pointer-events: auto; }
-        #user-form-modal form { display: flex; flex-direction: column; gap: 15px; }
-        #user-form-modal input, #user-form-modal textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
-        #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        #user-form-modal form, #contact-form { display: flex; flex-direction: column; gap: 15px; }
+        #user-form-modal input, #user-form-modal textarea, #contact-form input, #contact-form textarea { padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; width: 100%; box-sizing: border-box; }
+        #user-form-modal .submit-btn, #contact-form .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
         @media (max-width: 600px) {
             body { padding-top: 105px; }
@@ -180,6 +206,7 @@
             .product-image { height: 150px; }
             .product-info { padding: 10px; }
             .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
+            .footer-nav .nav-button { padding: 10px; font-size: 0.8rem; }
             .search-overlay { padding-top: 90px; }
             .search-bar-container { width: 85%; }
             .search-close-btn { top: 20px; right: 20px; font-size: 2.5rem; }
@@ -230,7 +257,9 @@
         <div class="load-more-container">
             <button id="load-more-btn" class="load-more-btn hidden">Show More</button>
         </div>
-    </main> <footer class="main-footer">
+    </main>
+
+    <footer class="main-footer">
         <div class="footer-social-icons">
             <a href="https://www.instagram.com/tech_droide?igsh=d2IwZXk1MDY3bGd2"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>
@@ -241,12 +270,52 @@
     </footer>
 
     <footer class="footer-nav" id="footer-nav">
-        <a href="home.html" class="nav-button">Home</a>
+        <a href="home.html" class="nav-button"><i class="fas fa-home"></i> Home</a>
+        <a class="nav-button" id="about-open-btn"><i class="fas fa-info-circle"></i> About</a>
+        <a class="nav-button" id="contact-open-btn"><i class="fas fa-envelope"></i> Contact</a>
         <a class="nav-button" id="cart-open-btn">
-            Cart 
+            <i class="fas fa-shopping-cart"></i> Cart
             <span class="cart-count-badge" id="cart-count-badge">0</span>
         </a>
     </footer>
+
+    <div class="modal-overlay" id="about-overlay">
+        <div class="modal-box">
+            <button class="modal-close-btn" id="about-close-btn">&times;</button>
+            <h2 style="text-align:center; color:#0056b3;">About Us</h2>
+            <p style="line-height:1.6; color:#555;">
+                Welcome to <strong>TECHDROIDE</strong>! <br><br>
+                We are passionate about bringing you the best in electronics, fashion, and lifestyle products. Our mission is to provide high-quality items at affordable prices with excellent customer service.
+                <br><br>
+                Thank you for choosing us!
+            </p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="contact-overlay">
+        <div class="modal-box">
+            <button class="modal-close-btn" id="contact-close-btn">&times;</button>
+            <h2 style="text-align:center; color:#0056b3;">Contact Us</h2>
+            <p style="text-align:center; margin-bottom:20px;">Send us a direct email!</p>
+            
+            <form id="contact-form">
+                <input type="hidden" name="access_key" value="a752bc9d-7d9f-4cc4-8664-d3245e874dfe">
+                
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" placeholder="Your Message" required style="height:100px;"></textarea>
+                
+                <input type="hidden" name="redirect" value="false">
+                
+                <button type="submit" class="submit-btn">Send to Gmail</button>
+            </form>
+            
+            <div style="text-align:center; margin-top:20px;">
+                <p><strong>Email:</strong> support@techdroide.com</p>
+                <p><strong>Phone:</strong> +91 9518843849</p>
+            </div>
+        </div>
+    </div>
 
     <div class="modal-overlay" id="cart-overlay">
         <div class="modal-box" id="cart-modal">
@@ -296,7 +365,6 @@
 
         let allProducts = [];
         let cart = [];
-        
         let visibleCount = window.innerWidth > 600 ? 8 : 6; 
         const loadStep = 4; 
 
@@ -481,49 +549,6 @@
             badge.style.display = count > 0 ? "flex" : "none";
         }
 
-        document.getElementById("search-trigger-btn").onclick = () => {
-            document.getElementById("search-input").value = "";
-            document.getElementById("search-results").innerHTML = "";
-            
-            const overlay = document.getElementById("search-overlay");
-            overlay.classList.add("active");
-            document.getElementById("search-input").focus();
-            document.body.classList.add("body-no-scroll");
-
-            history.pushState({ modalOpen: "search-overlay" }, null, "#search");
-        };
-
-        document.getElementById("search-close-btn").onclick = () => history.back();
-
-        document.getElementById("search-input").addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase();
-            const resultsContainer = document.getElementById("search-results");
-            resultsContainer.innerHTML = "";
-
-            if(query.length === 0) return;
-
-            const matches = allProducts.filter(p => p.name.toLowerCase().includes(query));
-            
-            if(matches.length === 0) {
-                resultsContainer.innerHTML = "<p style='text-align:center; color:#888;'>No products found</p>";
-                return;
-            }
-
-            matches.forEach(p => {
-                const div = document.createElement("div");
-                div.className = "search-item";
-                div.onclick = () => showInfo(p.id);
-                div.innerHTML = `
-                    <img src="${p.imageSrc || 'https://via.placeholder.com/50'}" alt="${p.name}">
-                    <div>
-                        <h4>${p.name}</h4>
-                        <p>₹${p.price}</p>
-                    </div>
-                `;
-                resultsContainer.appendChild(div);
-            });
-        });
-
         function openModal(id) {
             const modal = document.getElementById(id);
             modal.classList.add("active");
@@ -544,12 +569,50 @@
         });
 
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
+        document.getElementById("about-open-btn").onclick = () => openModal("about-overlay");
+        document.getElementById("contact-open-btn").onclick = () => openModal("contact-overlay");
+
+        document.getElementById("search-trigger-btn").onclick = () => {
+            document.getElementById("search-input").value = "";
+            document.getElementById("search-results").innerHTML = "";
+            const overlay = document.getElementById("search-overlay");
+            overlay.classList.add("active");
+            document.getElementById("search-input").focus();
+            document.body.classList.add("body-no-scroll");
+            history.pushState({ modalOpen: "search-overlay" }, null, "#search");
+        };
+
         document.getElementById("cart-close-btn").onclick = () => history.back();
         document.getElementById("product-info-close-btn").onclick = () => history.back();
         document.getElementById("form-close-btn").onclick = () => history.back();
+        document.getElementById("search-close-btn").onclick = () => history.back();
+        document.getElementById("about-close-btn").onclick = () => history.back();
+        document.getElementById("contact-close-btn").onclick = () => history.back();
 
         document.querySelectorAll(".modal-overlay").forEach(o => { 
             o.onclick = (e) => { if(e.target === o) history.back(); } 
+        });
+
+        document.getElementById("search-input").addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase();
+            const resultsContainer = document.getElementById("search-results");
+            resultsContainer.innerHTML = "";
+            if(query.length === 0) return;
+            const matches = allProducts.filter(p => p.name.toLowerCase().includes(query));
+            if(matches.length === 0) {
+                resultsContainer.innerHTML = "<p style='text-align:center; color:#888;'>No products found</p>";
+                return;
+            }
+            matches.forEach(p => {
+                const div = document.createElement("div");
+                div.className = "search-item";
+                div.onclick = () => showInfo(p.id);
+                div.innerHTML = `
+                    <img src="${p.imageSrc || 'https://via.placeholder.com/50'}" alt="${p.name}">
+                    <div><h4>${p.name}</h4><p>₹${p.price}</p></div>
+                `;
+                resultsContainer.appendChild(div);
+            });
         });
 
         document.getElementById("whatsapp-order-btn").onclick = () => { 
@@ -568,6 +631,7 @@
             }
         };
 
+        // --- ORDER FORM ---
         document.getElementById("whatsapp-form").onsubmit = (e) => {
             e.preventDefault();
             const name = document.getElementById("user-name").value;
@@ -581,12 +645,37 @@
             });
             msg += `\n\n*Total: ₹${total}*`;
             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
-            
             cart = []; 
             saveCart(); 
             renderProducts();
             history.back(); 
             document.getElementById("whatsapp-form").reset();
+        };
+
+        // --- DIRECT GMAIL CONTACT FORM (AJAX) ---
+        document.getElementById("contact-form").onsubmit = function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Send data to Web3Forms API via Fetch (AJAX)
+            fetch("https://api.web3forms.com/submit", {
+                method: "POST",
+                body: formData
+            })
+            .then(async (response) => {
+                if (response.status === 200) {
+                   alert("Message sent successfully to Gmail!");
+                   history.back(); // Close modal
+                   document.getElementById("contact-form").reset(); 
+                } else {
+                    alert("Something went wrong. Check Access Key.");
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Error sending message.");
+            });
         };
 
         let lastScroll = window.scrollY;
