@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <style>
-        /* --- 1. GLOBAL FIX (Ye Important hai) --- */
+        /* --- 1. GLOBAL FIX --- */
         * { box-sizing: border-box; } 
 
         body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; padding-top: 110px; padding-bottom: 80px; transition: overflow 0.3s ease; }
@@ -21,15 +21,15 @@
         .search-trigger-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; }
         .search-trigger-btn:hover { transform: scale(1.2); }
 
-        /* --- SEARCH OVERLAY (FIXED CENTER) --- */
+        /* --- SEARCH OVERLAY (FIXED) --- */
         .search-overlay { 
             position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; 
-            background-color: rgba(255,255,255,0.98); 
+            background-color: rgba(255,255,255,0.98); /* Opaque background disables back page visual */
             z-index: 2500; 
             display: flex; 
             flex-direction: column; 
-            align-items: center; /* Center Horizontally */
+            align-items: center; 
             padding-top: 100px; 
             opacity: 0; visibility: hidden; 
             transition: all 0.3s ease; 
@@ -44,7 +44,7 @@
         }
         
         .search-bar-container { 
-            width: 90%; /* Mobile width */
+            width: 90%; 
             max-width: 600px; 
             position: relative; 
             display: flex;
@@ -171,8 +171,7 @@
         <div class="search-bar-container">
             <input type="text" class="search-input" id="search-input" placeholder="Search for products...">
         </div>
-        <div class="search-results" id="search-results">
-            </div>
+        <div class="search-results" id="search-results"></div>
     </div>
 
     <main class="content">
@@ -430,16 +429,23 @@
             badge.style.display = count > 0 ? "flex" : "none";
         }
 
+        // --- UPDATED SEARCH LOGIC (CLEARS INPUT) ---
         document.getElementById("search-trigger-btn").onclick = () => {
-            document.getElementById("search-overlay").classList.add("active");
+            // 1. Clear Previous Search
+            document.getElementById("search-input").value = "";
+            document.getElementById("search-results").innerHTML = "";
+            
+            // 2. Open Overlay
+            const overlay = document.getElementById("search-overlay");
+            overlay.classList.add("active");
             document.getElementById("search-input").focus();
             document.body.classList.add("body-no-scroll");
+
+            // 3. Add to history (so back button closes search)
+            history.pushState({ modalOpen: "search-overlay" }, null, "#search");
         };
 
-        document.getElementById("search-close-btn").onclick = () => {
-            document.getElementById("search-overlay").classList.remove("active");
-            document.body.classList.remove("body-no-scroll");
-        };
+        document.getElementById("search-close-btn").onclick = () => history.back();
 
         document.getElementById("search-input").addEventListener("input", (e) => {
             const query = e.target.value.toLowerCase();
