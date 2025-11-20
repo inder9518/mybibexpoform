@@ -14,18 +14,19 @@
             margin: 0; 
             font-family: Arial, sans-serif; 
             background-color: #f4f4f4; 
-            /* Calculation: Header Top(20) + Header Height(120) + Gap(5) = 145px */
-            padding-top: 145px; 
+            /* Calculation: Header Top(20) + Header Height(90) + Gap(5) = 115px */
+            padding-top: 115px; 
             padding-bottom: 0; 
             transition: overflow 0.3s ease; 
         }
         body.body-no-scroll { overflow: hidden; }
 
-        /* --- HEADER --- */
+        /* --- HEADER (PC SIZE REDUCED) --- */
         .curved-header { 
             background-color: #0056b3; 
             color: white; 
-            padding: 25px 50px; 
+            /* Compact Padding for PC */
+            padding: 10px 40px; 
             border-radius: 50px; 
             position: fixed; 
             top: 20px; 
@@ -36,13 +37,13 @@
             justify-content: space-between; 
             align-items: center; 
             box-shadow: 0 6px 20px rgba(0,0,0,0.25); 
-            height: 120px; /* Explicit height control */
+            height: 90px; /* Reduced Height from 120px */
         }
         
         .header-logo { 
-            max-width: 200px; 
+            max-width: 180px; 
             height: auto; 
-            max-height: 70px; 
+            max-height: 60px; /* Adjusted for smaller header */
             object-fit: contain; 
         }
         
@@ -50,7 +51,7 @@
             background: none; 
             border: none; 
             color: white; 
-            font-size: 2rem; 
+            font-size: 1.8rem; 
             cursor: pointer; 
             transition: transform 0.2s; 
         }
@@ -65,15 +66,15 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            padding-top: 140px; 
+            padding-top: 120px; /* Adjusted for smaller header */
             opacity: 0; visibility: hidden; 
             transition: all 0.3s ease; 
         }
         .search-overlay.active { opacity: 1; visibility: visible; }
         
-        .search-close-btn { position: absolute; top: 35px; right: 40px; font-size: 3rem; cursor: pointer; color: #333; background: none; border: none; padding: 10px; }
+        .search-close-btn { position: absolute; top: 30px; right: 40px; font-size: 2.5rem; cursor: pointer; color: #333; background: none; border: none; padding: 10px; }
         .search-bar-container { width: 90%; max-width: 700px; position: relative; display: flex; justify-content: center; }
-        .search-input { width: 100%; padding: 20px 30px; font-size: 1.4rem; border: 3px solid #0056b3; border-radius: 40px; outline: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .search-input { width: 100%; padding: 15px 25px; font-size: 1.3rem; border: 3px solid #0056b3; border-radius: 40px; outline: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .search-results { margin-top: 20px; width: 90%; max-width: 700px; max-height: 60vh; overflow-y: auto; }
         .search-item { display: flex; align-items: center; gap: 15px; background: white; padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; transition: background 0.2s; }
         .search-item:hover { background-color: #f0f8ff; }
@@ -82,11 +83,7 @@
         .search-item div p { margin: 0; font-size: 1rem; color: #0056b3; font-weight: bold; }
 
         /* --- CONTENT --- */
-        .content { 
-            padding: 0 15px; /* Zero top padding, handled by body */
-            max-width: 1200px; 
-            margin: 0 auto; 
-        }
+        .content { padding: 0 15px; max-width: 1200px; margin: 0 auto; }
         .content h2 { text-align: center; text-transform: uppercase; font-weight: bold; text-decoration: underline; margin-top: 20px; margin-bottom: 25px; color: #333; font-size: 2rem; }
         .hero-banner { width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
@@ -175,7 +172,7 @@
         #user-form-modal .submit-btn { background-color: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
         
         @media (max-width: 600px) {
-            body { padding-top: 105px; } /* Mobile spacing adjusted for smaller header */
+            body { padding-top: 105px; } /* Mobile spacing */
             .curved-header { 
                 padding: 15px 25px; 
                 border-radius: 30px; 
