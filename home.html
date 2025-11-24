@@ -12,7 +12,7 @@
         body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; padding-top: 90px; padding-bottom: 0; transition: overflow 0.3s ease; }
         body.body-no-scroll { overflow: hidden; }
 
-        /* --- HEADER WITH RIGHT SEARCH BAR --- */
+        /* --- HEADER --- */
         .curved-header { 
             background-color: #0056b3; 
             padding: 10px 20px; 
@@ -20,7 +20,7 @@
             z-index: 900; 
             display: flex; 
             align-items: center; 
-            justify-content: space-between; /* Pushes Logo Left, Search Right */
+            justify-content: space-between; 
             gap: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
             height: 80px; 
@@ -28,11 +28,11 @@
         
         .header-logo { max-width: 140px; height: 50px; object-fit: contain; flex-shrink: 0; }
 
-        /* Search Bar Right Aligned */
+        /* Search Bar */
         .header-search-container {
             position: relative;
             width: 100%;
-            max-width: 250px; /* Width limited for Right side */
+            max-width: 250px;
         }
         .header-search-input {
             width: 100%;
@@ -45,22 +45,23 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             background-color: rgba(255, 255, 255, 0.9);
         }
-        .search-icon-inside {
+        .search-action-icon {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #0056b3;
-            pointer-events: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-        
-        /* Search Dropdown Results */
+        .search-action-icon.fa-times { color: #ff4d4d; }
+
+        /* Search Dropdown */
         .search-dropdown {
             position: absolute;
             top: 45px;
-            right: 0; /* Align dropdown to right edge of search bar */
-            left: auto;
-            width: 300px; /* Wider dropdown than bar for better view */
+            right: 0;
+            width: 300px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -81,7 +82,6 @@
         .hero-banner { width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero-banner img { width: 100%; height: auto; display: block; }
 
-        /* Product Grid */
         h2 { text-align: center; text-transform: uppercase; font-weight: bold; color: #333; margin: 20px 0; border-bottom: 2px solid #0056b3; display: inline-block; padding-bottom: 5px; }
         .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; min-height: 300px; }
         .product-card { background-color: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.2s ease; display: flex; flex-direction: column; }
@@ -101,7 +101,6 @@
         .footer-social-icons { display: flex; justify-content: center; gap: 25px; margin-bottom: 10px; }
         .footer-social-icons a { color: white; font-size: 1.4rem; }
         
-        /* Footer Nav */
         .footer-nav { background-color: #333; padding: 10px 15px; border-radius: 30px; display: flex; gap: 8px; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; transition: transform 0.4s; box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
         .footer-nav.footer-hidden { transform: translateX(-50%) translateY(150%); }
         .footer-nav .nav-button { background-color: #007bff; color: white; padding: 10px 15px; border-radius: 20px; text-decoration: none; font-weight: bold; cursor: pointer; position: relative; overflow: visible; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
@@ -114,7 +113,6 @@
         .modal-box { background-color: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 2rem; cursor: pointer; color: #555; }
 
-        /* Cart Items */
         #cart-modal .cart-items-list { margin-top: 20px; max-height: 300px; overflow-y: auto; }
         .cart-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .cart-item img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; }
@@ -126,15 +124,13 @@
         #place-order-btn { flex: 2; background: #007bff; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
         #clear-cart-btn { flex: 1; background: #ff4d4d; color: white; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
 
-        /* Forms */
         input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 8px; }
         .submit-btn { background: #28a745; color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; }
 
-        /* Info Popup */
         #info-popup-img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
         #popup-add-to-cart-btn { background: #ff6f00; color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
 
-        /* --- SUCCESS POPUP --- */
+        /* Success Popup */
         .success-modal {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
             background: white; padding: 30px; border-radius: 20px;
@@ -147,7 +143,6 @@
         .success-icon { font-size: 50px; color: #28a745; margin-bottom: 15px; display: block; }
         .success-modal h3 { margin: 0; color: #333; font-size: 1.2rem; }
         
-        /* Toast */
         .toast-popup { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 0.9rem; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 3000; }
         .toast-popup.active { opacity: 1; visibility: visible; }
 
@@ -155,23 +150,20 @@
             .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .product-image { height: 150px; }
             .header-logo { max-width: 100px; }
-            
-            /* Mobile Search Adjustments */
             .header-search-container { max-width: 180px; } 
             .header-search-input { font-size: 0.85rem; padding: 8px 12px; }
-            .search-dropdown { width: 250px; right: -10px; } /* Adjust dropdown position on mobile */
+            .search-dropdown { width: 250px; right: -10px; } 
         }
     </style>
 </head>
 <body>
 
     <header class="curved-header">
-        <a href="index.html"><img src="logo.png" alt="Logo" class="header-logo"></a>
+        <a href="home.html"><img src="logo.png" alt="Logo" class="header-logo"></a>
         
-        <div class="header-search-container">
+        <div class="header-search-container" id="search-container">
             <input type="text" class="header-search-input" id="main-search-input" placeholder="Search...">
-            <i class="fas fa-search search-icon-inside"></i>
-            
+            <i class="fas fa-search search-action-icon" id="search-icon-btn"></i>
             <div class="search-dropdown" id="search-dropdown"></div>
         </div>
     </header>
@@ -205,7 +197,7 @@
     </footer>
 
     <footer class="footer-nav" id="footer-nav">
-        <a href="index.html" class="nav-button"><i class="fas fa-home"></i> Home</a>
+        <a href="home.html" class="nav-button"><i class="fas fa-home"></i> Home</a>
         <a class="nav-button" id="about-open-btn"><i class="fas fa-info-circle"></i> About</a>
         <a class="nav-button" id="contact-open-btn"><i class="fas fa-envelope"></i> Contact</a>
         <a class="nav-button" id="cart-open-btn">
@@ -220,25 +212,16 @@
     </div>
 
     <div class="modal-overlay" id="about-overlay">
-        <div class="modal-box">
-            <button class="modal-close-btn">&times;</button>
-            <h2 style="text-align:center; color:#0056b3;">About Us</h2>
-            <p style="text-align:center;">Welcome to TECHDROIDE! We provide best quality electronics at affordable prices.</p>
-        </div>
+        <div class="modal-box"><button class="modal-close-btn">&times;</button><h2 style="text-align:center; color:#0056b3;">About Us</h2><p style="text-align:center;">Welcome to TECHDROIDE!</p></div>
     </div>
 
     <div class="modal-overlay" id="contact-overlay">
-        <div class="modal-box">
-            <button class="modal-close-btn">&times;</button>
-            <h2 style="text-align:center; color:#0056b3;">Contact Us</h2>
-            
+        <div class="modal-box"><button class="modal-close-btn">&times;</button><h2 style="text-align:center; color:#0056b3;">Contact Us</h2>
             <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="f6e5b782-5702-418f-989a-b7a55acf53ef">
-                
                 <input type="text" name="name" placeholder="Your Name" required>
                 <input type="email" name="email" placeholder="Your Email" required>
                 <textarea name="message" placeholder="Your Message" required style="height:100px;"></textarea>
-                
                 <input type="hidden" name="redirect" value="false">
                 <button type="submit" class="submit-btn">Send Message</button>
             </form>
@@ -246,40 +229,15 @@
     </div>
 
     <div class="modal-overlay" id="cart-overlay">
-        <div class="modal-box" id="cart-modal">
-            <button class="modal-close-btn">&times;</button>
-            <h2>Your Cart</h2>
-            <div id="cart-items-list"></div>
-            <div class="cart-total" id="cart-total">Total: ₹0</div>
-            <div class="cart-actions">
-                <button id="place-order-btn">Place Order</button>
-                <button id="clear-cart-btn">Clear Cart</button>
-            </div>
-        </div>
+        <div class="modal-box" id="cart-modal"><button class="modal-close-btn">&times;</button><h2>Your Cart</h2><div id="cart-items-list"></div><div class="cart-total" id="cart-total">Total: ₹0</div><div class="cart-actions"><button id="place-order-btn">Place Order</button><button id="clear-cart-btn">Clear Cart</button></div></div>
     </div>
 
     <div class="modal-overlay" id="user-form-overlay">
-        <div class="modal-box" id="user-form-modal">
-            <button class="modal-close-btn">&times;</button>
-            <h2>Shipping Details</h2>
-            <form id="order-form">
-                <input type="text" id="user-name" placeholder="Full Name" required>
-                <input type="tel" id="user-phone" placeholder="Phone Number" required>
-                <textarea id="user-address" placeholder="Full Address" required></textarea>
-                <button type="submit" class="submit-btn">Confirm Order</button>
-            </form>
-        </div>
+        <div class="modal-box" id="user-form-modal"><button class="modal-close-btn">&times;</button><h2>Shipping Details</h2><form id="order-form"><input type="text" id="user-name" placeholder="Full Name" required><input type="tel" id="user-phone" placeholder="Phone Number" required><textarea id="user-address" placeholder="Full Address" required></textarea><button type="submit" class="submit-btn">Confirm Order</button></form></div>
     </div>
 
     <div class="modal-overlay" id="product-info-overlay">
-        <div class="modal-box" id="product-info-modal">
-            <button class="modal-close-btn">&times;</button>
-            <img src="" id="info-popup-img">
-            <h2 id="info-popup-name"></h2>
-            <p id="info-popup-price" style="color:#0056b3; font-weight:bold; font-size:1.2rem;"></p>
-            <p id="info-popup-desc"></p>
-            <button id="popup-add-to-cart-btn">Add to Cart</button>
-        </div>
+        <div class="modal-box" id="product-info-modal"><button class="modal-close-btn">&times;</button><img src="" id="info-popup-img"><h2 id="info-popup-name"></h2><p id="info-popup-price" style="color:#0056b3; font-weight:bold; font-size:1.2rem;"></p><p id="info-popup-desc"></p><button id="popup-add-to-cart-btn">Add to Cart</button></div>
     </div>
 
     <div class="toast-popup" id="toast-overlay">Added to Cart</div>
@@ -287,7 +245,6 @@
     <script>
         // ================= CONFIGURATION =================
         const PRODUCT_SHEET_ID = "1b6PU22uSE_P6R6uRzURfGVRXaoId7Fbp34foUiwtD3k"; 
-        // PASTE YOUR GOOGLE SCRIPT URL HERE
         const ORDER_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzgHBpK_fx91pPwnWrommG57NbilZToT3HydsawtS8GF0OWh8kQWWEGdR0f5WQF1632/exec"; 
         const SHEET_GID = "0"; 
         // ==================================================
@@ -298,163 +255,105 @@
         const loadStep = 4; 
 
         document.addEventListener("DOMContentLoaded", () => {
+            // 🔥 RELOAD LOGIC: CLEAR CART ON REFRESH 🔥
+            const navEntry = performance.getEntriesByType("navigation")[0];
+            if (navEntry && navEntry.type === "reload") {
+                console.log("Page Reloaded: Clearing Cart");
+                localStorage.removeItem('myCart'); 
+                cart = [];
+            } else {
+                cart = JSON.parse(localStorage.getItem('myCart')) || [];
+            }
+            
             updateCount();
             
             const url = `https://docs.google.com/spreadsheets/d/${PRODUCT_SHEET_ID}/gviz/tq?tqx=out:json&tq&gid=${SHEET_GID}`;
-            fetch(url)
-                .then(res => res.text())
-                .then(text => {
-                    const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
-                    allProducts = json.table.rows.map((row) => ({
-                        id: row.c[0]?.v || 0,
-                        name: row.c[1]?.v || "No Name",
-                        price: row.c[2]?.v || 0,
-                        imageSrc: row.c[3]?.v || "",
-                        info: row.c[4]?.v || ""
-                    }));
-                    renderProducts();
-                })
-                .catch(err => {
-                    document.getElementById("product-grid").innerHTML = "<h3>Error loading products.</h3>";
-                });
+            fetch(url).then(res => res.text()).then(text => {
+                const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
+                allProducts = json.table.rows.map((row) => ({
+                    id: row.c[0]?.v || 0, name: row.c[1]?.v || "No Name", price: row.c[2]?.v || 0, imageSrc: row.c[3]?.v || "", info: row.c[4]?.v || ""
+                }));
+                renderProducts();
+            });
         });
 
         function renderProducts() {
             const grid = document.getElementById("product-grid");
             const loadBtn = document.getElementById("load-more-btn");
             grid.innerHTML = "";
-            
-            if(allProducts.length === 0) {
-                grid.innerHTML = "<h3>No products found.</h3>";
-                loadBtn.classList.add("hidden");
-                return;
-            }
-
+            if(allProducts.length === 0) { grid.innerHTML = "<h3>No products found.</h3>"; loadBtn.classList.add("hidden"); return; }
             allProducts.slice(0, visibleCount).forEach(p => {
                 const isInCart = cart.some(c => c.id == p.id);
                 const img = p.imageSrc || "https://via.placeholder.com/300";
-                
-                grid.innerHTML += `
-                    <div class="product-card">
-                        <img src="${img}" class="product-image" onclick="showInfo(${p.id})">
-                        <div class="product-info">
-                            <h3 onclick="showInfo(${p.id})">${p.name}</h3>
-                            <p class="product-price">₹${p.price}</p>
-                            <button class="add-to-cart-btn" onclick="addToCart(${p.id}, this)" ${isInCart ? 'disabled' : ''}>
-                                ${isInCart ? 'Added' : 'Add to Cart'}
-                            </button>
-                        </div>
-                    </div>
-                `;
+                grid.innerHTML += `<div class="product-card"><img src="${img}" class="product-image" onclick="showInfo(${p.id})"><div class="product-info"><h3 onclick="showInfo(${p.id})">${p.name}</h3><p class="product-price">₹${p.price}</p><button class="add-to-cart-btn" onclick="addToCart(${p.id}, this)" ${isInCart ? 'disabled' : ''}>${isInCart ? 'Added' : 'Add to Cart'}</button></div></div>`;
             });
-
-            if (visibleCount >= allProducts.length) loadBtn.classList.add("hidden");
-            else loadBtn.classList.remove("hidden");
+            if (visibleCount >= allProducts.length) loadBtn.classList.add("hidden"); else loadBtn.classList.remove("hidden");
         }
 
         document.getElementById("load-more-btn").onclick = () => { visibleCount += loadStep; renderProducts(); };
 
-        // --- SEARCH FUNCTIONALITY ---
+        // --- SMART SEARCH LOGIC ---
         const searchInput = document.getElementById("main-search-input");
         const searchDropdown = document.getElementById("search-dropdown");
+        const searchIcon = document.getElementById("search-icon-btn");
+
+        searchInput.addEventListener("focus", () => {
+            document.body.classList.add("body-no-scroll");
+            searchIcon.classList.remove("fa-search");
+            searchIcon.classList.add("fa-times");
+            history.pushState({ searchOpen: true }, null, "#search");
+        });
 
         searchInput.addEventListener("input", (e) => {
             const query = e.target.value.toLowerCase();
             searchDropdown.innerHTML = "";
-            
             if(query.length > 0) {
                 const matches = allProducts.filter(p => p.name.toLowerCase().includes(query));
-                
                 if(matches.length > 0) {
                     searchDropdown.classList.add("active");
                     matches.forEach(p => {
-                        const div = document.createElement("div");
-                        div.className = "search-item";
+                        const div = document.createElement("div"); div.className = "search-item";
                         div.innerHTML = `<img src="${p.imageSrc}"><div><h4>${p.name}</h4><p>₹${p.price}</p></div>`;
-                        div.onclick = () => {
-                            showInfo(p.id);
-                            searchDropdown.classList.remove("active");
-                            searchInput.value = "";
-                        };
+                        div.onclick = () => { showInfo(p.id); closeSearch(); };
                         searchDropdown.appendChild(div);
                     });
-                } else {
-                    searchDropdown.innerHTML = "<div style='padding:10px; text-align:center;'>No results found</div>";
-                    searchDropdown.classList.add("active");
-                }
-            } else {
-                searchDropdown.classList.remove("active");
-            }
+                } else { searchDropdown.innerHTML = "<div style='padding:10px; text-align:center;'>No results</div>"; searchDropdown.classList.add("active"); }
+            } else searchDropdown.classList.remove("active");
         });
 
-        document.addEventListener("click", (e) => {
-            if (!e.target.closest(".header-search-container")) {
-                searchDropdown.classList.remove("active");
-            }
+        searchIcon.addEventListener("click", () => {
+            if(searchIcon.classList.contains("fa-times")) closeSearch();
         });
 
-        // --- CART & INFO FUNCTIONS ---
-        function showInfo(id) {
-            const p = allProducts.find(x => x.id == id);
-            if(!p) return;
-            
-            document.getElementById("info-popup-img").src = p.imageSrc;
-            document.getElementById("info-popup-name").innerText = p.name;
-            document.getElementById("info-popup-price").innerText = "₹" + p.price;
-            document.getElementById("info-popup-desc").innerText = p.info;
-
-            const btn = document.getElementById("popup-add-to-cart-btn");
-            const isInCart = cart.some(c => c.id == p.id);
-            
-            if(isInCart) { btn.innerText = "Added"; btn.disabled = true; }
-            else { 
-                btn.innerText = "Add to Cart"; btn.disabled = false; 
-                btn.onclick = () => { addToCart(p.id, btn); closeModal(); };
-            }
-            openModal("product-info-overlay");
+        function closeSearch() {
+            searchInput.value = ""; searchDropdown.innerHTML = "";
+            searchDropdown.classList.remove("active");
+            searchIcon.classList.remove("fa-times"); searchIcon.classList.add("fa-search");
+            document.body.classList.remove("body-no-scroll"); searchInput.blur();
+            if(window.location.hash === "#search") history.back();
         }
 
+        // --- CART LOGIC ---
         function addToCart(id, btn) {
             cart = JSON.parse(localStorage.getItem('myCart')) || [];
             if(!cart.some(c => c.id == id)) {
                 const p = allProducts.find(x => x.id == id);
                 cart.push({ id: id, qty: 1, name: p.name, price: p.price, img: p.imageSrc });
-                
                 localStorage.setItem('myCart', JSON.stringify(cart));
                 if(btn) { btn.innerText = "Added"; btn.disabled = true; }
-                
                 updateCount();
-                const t = document.getElementById("toast-overlay");
-                t.classList.add("active"); setTimeout(() => t.classList.remove("active"), 1000);
+                const t = document.getElementById("toast-overlay"); t.classList.add("active"); setTimeout(() => t.classList.remove("active"), 1000);
             }
         }
 
         function renderCart() {
             cart = JSON.parse(localStorage.getItem('myCart')) || [];
             const list = document.getElementById("cart-items-list");
-            list.innerHTML = "";
-            let total = 0;
-            
-            if(cart.length === 0) {
-                list.innerHTML = "<p>Cart is empty.</p>";
-                document.getElementById("cart-total").innerText = "Total: ₹0";
-                return;
-            }
-            
+            list.innerHTML = ""; let total = 0;
+            if(cart.length === 0) { list.innerHTML = "<p>Cart is empty.</p>"; document.getElementById("cart-total").innerText = "Total: ₹0"; return; }
             cart.forEach(c => {
                 const cost = c.price * c.qty; total += cost;
-                list.innerHTML += `
-                    <div class="cart-item">
-                        <img src="${c.img}">
-                        <div class="cart-item-info">
-                            <h4>${c.name}</h4><p>₹${cost}</p>
-                            <div class="cart-qty-controls">
-                                <button onclick="changeQty(${c.id}, -1)">-</button>
-                                <span style="margin:0 10px;">${c.qty}</span>
-                                <button onclick="changeQty(${c.id}, 1)">+</button>
-                            </div>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="cart-item"><img src="${c.img}"><div class="cart-item-info"><h4>${c.name}</h4><p>₹${cost}</p><div class="cart-qty-controls"><button onclick="changeQty(${c.id}, -1)">-</button><span style="margin:0 10px;">${c.qty}</span><button onclick="changeQty(${c.id}, 1)">+</button></div></div></div>`;
             });
             document.getElementById("cart-total").innerText = "Total: ₹" + total;
         }
@@ -477,9 +376,41 @@
             badge.innerText = count; badge.style.display = count > 0 ? "flex" : "none";
         }
 
-        function openModal(id) { document.getElementById(id).classList.add("active"); document.body.classList.add("body-no-scroll"); }
-        function closeModal() { document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active")); document.body.classList.remove("body-no-scroll"); }
-        
+        // --- MODAL & BACK BUTTON LOGIC ---
+        function openModal(id) {
+            document.getElementById(id).classList.add("active");
+            document.body.classList.add("body-no-scroll");
+            history.pushState({ modalOpen: id }, null, "#modal");
+        }
+
+        function closeModal() {
+            if(window.location.hash === "#modal" || window.location.hash === "#search") { history.back(); } 
+            else {
+                document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+                document.body.classList.remove("body-no-scroll");
+                searchIcon.classList.remove("fa-times"); searchIcon.classList.add("fa-search");
+            }
+        }
+
+        window.addEventListener("popstate", () => {
+            document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("active"));
+            document.body.classList.remove("body-no-scroll");
+            searchIcon.classList.remove("fa-times"); searchIcon.classList.add("fa-search");
+            searchDropdown.classList.remove("active");
+        });
+
+        function showInfo(id) {
+            const p = allProducts.find(x => x.id == id); if(!p) return;
+            document.getElementById("info-popup-img").src = p.imageSrc;
+            document.getElementById("info-popup-name").innerText = p.name;
+            document.getElementById("info-popup-price").innerText = "₹" + p.price;
+            document.getElementById("info-popup-desc").innerText = p.info;
+            const btn = document.getElementById("popup-add-to-cart-btn");
+            const isInCart = cart.some(c => c.id == p.id);
+            if(isInCart) { btn.innerText = "Added"; btn.disabled = true; } else { btn.innerText = "Add to Cart"; btn.disabled = false; btn.onclick = () => { addToCart(p.id, btn); closeModal(); }; }
+            openModal("product-info-overlay");
+        }
+
         document.getElementById("cart-open-btn").onclick = () => { renderCart(); openModal("cart-overlay"); };
         document.getElementById("about-open-btn").onclick = () => openModal("about-overlay");
         document.getElementById("contact-open-btn").onclick = () => openModal("contact-overlay");
@@ -487,7 +418,9 @@
 
         document.getElementById("place-order-btn").onclick = () => {
             if(cart.length === 0) return alert("Cart is empty!");
-            closeModal(); openModal("user-form-overlay");
+            document.getElementById("cart-overlay").classList.remove("active"); // Force close cart without history
+            history.back(); // Clean history
+            setTimeout(() => openModal("user-form-overlay"), 50);
         };
 
         document.getElementById("clear-cart-btn").onclick = () => {
@@ -496,59 +429,34 @@
 
         document.getElementById("order-form").onsubmit = function(e) {
             e.preventDefault();
-            const btn = this.querySelector(".submit-btn");
-            const originalText = btn.innerText;
+            const btn = this.querySelector(".submit-btn"); const origText = btn.innerText;
             btn.innerText = "Processing..."; btn.disabled = true;
-
-            const name = document.getElementById("user-name").value;
-            const phone = document.getElementById("user-phone").value;
-            const address = document.getElementById("user-address").value;
-            
-            let itemDetails = ""; let total = 0;
+            const name = document.getElementById("user-name").value, phone = document.getElementById("user-phone").value, address = document.getElementById("user-address").value;
+            let itemDetails = "", total = 0;
             cart.forEach(c => { itemDetails += `${c.name} (x${c.qty}), `; total += c.price * c.qty; });
             if(itemDetails.endsWith(", ")) itemDetails = itemDetails.slice(0, -2);
 
             fetch(ORDER_SCRIPT_URL, {
-                method: "POST", mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
+                method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, phone, address, items: itemDetails, total })
-            })
-            .then(() => {
-                closeModal(); 
-                this.reset();
-                cart = []; localStorage.setItem('myCart', '[]'); 
-                updateCount(); renderProducts();
-                btn.innerText = originalText; btn.disabled = false;
-
-                const popup = document.getElementById("success-modal");
-                popup.classList.add("active");
-                setTimeout(() => { popup.classList.remove("active"); }, 2000);
-            })
-            .catch(() => {
-                alert("Order Placed (Check Sheet).");
-                btn.innerText = originalText; btn.disabled = false;
-            });
+            }).then(() => {
+                history.back(); this.reset(); cart = []; localStorage.setItem('myCart', '[]'); updateCount(); renderProducts();
+                btn.innerText = origText; btn.disabled = false;
+                const popup = document.getElementById("success-modal"); popup.classList.add("active");
+                setTimeout(() => popup.classList.remove("active"), 2000);
+            }).catch(() => { alert("Order Placed (Check Sheet)."); btn.innerText = origText; btn.disabled = false; });
         };
 
         document.getElementById("contact-form").onsubmit = function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            fetch("https://api.web3forms.com/submit", { method: "POST", body: formData })
-            .then(res => {
-                if (res.status === 200) {
-                    alert("Message Sent!");
-                    closeModal(); this.reset();
-                } else alert("Error sending message.");
-            });
+            e.preventDefault(); const fd = new FormData(this);
+            fetch("https://api.web3forms.com/submit", { method: "POST", body: fd }).then(r => { if (r.status === 200) { alert("Message Sent!"); history.back(); this.reset(); } else alert("Error"); });
         };
 
         let lastScroll = window.scrollY;
         window.onscroll = () => {
-            const current = window.scrollY;
-            const footer = document.getElementById("footer-nav");
-            if (current > lastScroll) footer.classList.add("footer-hidden"); 
-            else footer.classList.remove("footer-hidden");
-            lastScroll = current;
+            const c = window.scrollY, f = document.getElementById("footer-nav");
+            if (c > lastScroll) f.classList.add("footer-hidden"); else f.classList.remove("footer-hidden");
+            lastScroll = c;
         };
     </script>
 </body>
