@@ -110,15 +110,20 @@
         }
         
         .product-info h3 { 
-            margin: 0 0 5px 0; 
-            font-size: 1.1rem; 
-            cursor: pointer;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            min-height: 2.4em; 
-        }
+    margin: 0 0 5px 0; 
+    font-size: 1.1rem; 
+    cursor: pointer;
+    
+    /* --- START OF FIX --- */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;  /* Existing vendor prefix */
+    line-clamp: 2;          /* NEW: Standard property to silence the warning */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    /* --- END OF FIX --- */
+
+    min-height: 2.4em; 
+}
         
         .product-price { font-size: 1.2rem; font-weight: bold; color: #0056b3; margin: 5px 0 15px 0; }
         
